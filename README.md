@@ -59,6 +59,8 @@ copilot
 > gsd execute-phase 1
 ```
 
+> **Recommended model:** Claude Sonnet 4.5 or higher. Smaller models may hallucinate shell commands instead of using proper file tools. Use `/model` to check/switch models.
+
 **Future:** Once published to npm, you'll be able to run `npx gsd-copilot-cli`.
 
 ---

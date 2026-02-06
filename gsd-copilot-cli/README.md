@@ -38,6 +38,8 @@ copilot
 > gsd execute-phase 1
 ```
 
+> **Recommended model:** Claude Sonnet 4.5 or higher. Smaller models may hallucinate shell commands instead of using proper file tools.
+
 ---
 
 ## Native CLI Integration
