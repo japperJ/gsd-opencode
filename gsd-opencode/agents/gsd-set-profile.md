@@ -10,9 +10,9 @@ You are executing the `/gsd-set-profile` command. Switch the project's active mo
 
 This command reads/writes two files:
 - `.planning/config.json` — profile state (active_profile, presets, custom_overrides)
-- `opencode.json` — agent model assignments (OpenCode's native config)
+- `copilot-gsd.json` — agent model assignments (Copilot CLI's native config)
 
-Do NOT modify agent .md files. Profile switching updates `opencode.json` in the project root.
+Do NOT modify agent .md files. Profile switching updates `copilot-gsd.json` in the project root.
 </role>
 
 <context>
@@ -48,7 +48,7 @@ Read `.planning/config.json`. Handle these cases:
 **Case B: File exists with `profiles.presets` key**
 - Use as-is
 
-**Also check `opencode.json`:**
+**Also check `copilot-gsd.json`:**
 - If missing, it will be created when changes are saved
 - If exists, it will be merged (preserve non-agent keys)
 
@@ -110,7 +110,7 @@ options:
 (Substitute actual model IDs from `config.profiles.presets` for each profile.)
 
 Input rules:
-- OpenCode's Question UI may display a "Type your own answer" option.
+- Copilot CLI's Question UI may display a "Type your own answer" option.
 - For this command, custom/freeform answers are NOT allowed.
 - If the user's selection is not exactly one of the option labels, print an error and re-run the same Question prompt.
 
@@ -136,14 +136,14 @@ Profile '{currentProfile}' is already active.
 ```
 Re-print current configuration table and stop.
 
-## Step 5.5: Validate selected models exist in OpenCode
+## Step 5.5: Validate selected models exist in Copilot CLI
 
-Before writing any files, validate that the effective models for `newProfile` are actually available in the current OpenCode installation.
+Before writing any files, validate that the effective models for `newProfile` are actually available in the current Copilot CLI installation.
 
 Run:
 
 ```bash
-opencode models
+# Available models: opus, sonnet, haiku
 ```
 
 Parse the output and extract valid model IDs in `provider/model` format.
@@ -154,21 +154,21 @@ Validate that all three effective model IDs exist in that list:
 - `{new.execution}`
 - `{new.verification}`
 
-If `opencode models` fails, or any model is missing:
+If `# Available models: opus, sonnet, haiku` fails, or any model is missing:
 
 Print an error like:
 
 ```text
-Error: One or more selected models are not available in OpenCode.
+Error: One or more selected models are not available in Copilot CLI.
 
 Missing:
 - {missingModel1}
 - {missingModel2}
 
-Run `opencode models` to see what is available, then update presets/overrides via /gsd-settings.
+Run `# Available models: opus, sonnet, haiku` to see what is available, then update presets/overrides via /gsd-settings.
 ```
 
-Stop. Do NOT write `.planning/config.json` and do NOT update `opencode.json`.
+Stop. Do NOT write `.planning/config.json` and do NOT update `copilot-gsd.json`.
 
 ## Step 6: Apply changes
 
@@ -180,13 +180,13 @@ Use the **write tool directly** to update both files. Do NOT use bash, python, o
     - Also set `config.model_profile` to `newProfile` (for orchestrators that read this key)
     - Write the config file (preserve all other keys)
 
-2. **Update opencode.json:**
+2. **Update copilot-gsd.json:**
 
 Build agent config from effective stage models for `newProfile`:
 
 ```json
 {
-  "$schema": "https://opencode.ai/config.json",
+  "$schema": "copilot-gsd-config",
   "agent": {
     "gsd-planner": { "model": "{new.planning}" },
     "gsd-plan-checker": { "model": "{new.planning}" },
@@ -206,7 +206,7 @@ Build agent config from effective stage models for `newProfile`:
 }
 ```
 
-If `opencode.json` already exists, merge the `agent` key (preserve other top-level keys).
+If `copilot-gsd.json` already exists, merge the `agent` key (preserve other top-level keys).
 
 3. **Report success:**
 
@@ -220,7 +220,7 @@ Current configuration:
 | execution    | {new.execution} |
 | verification | {new.verification} |
 
-Note: OpenCode loads `opencode.json` at startup and does not hot-reload model/agent assignments. Fully quit and relaunch OpenCode to apply this profile change.
+Note: Copilot CLI loads `copilot-gsd.json` at startup and does not hot-reload model/agent assignments. Fully quit and relaunch Copilot CLI to apply this profile change.
 ```
 
 Important: Do NOT print any tooling transcript (e.g., `python -m json.tool ...`) or a separate `Updated:` file list. The success message above is the complete user-facing output.
@@ -229,11 +229,11 @@ Important: Do NOT print any tooling transcript (e.g., `python -m json.tool ...`)
 
 <notes>
 - Use the Question tool for ALL user input (never ask user to type numbers)
-- Always show full model IDs (e.g., `opencode/glm-4.7-free`)
+- Always show full model IDs (e.g., `opus`)
 - Preserve all other config.json keys when writing (deep merge)
-- Do NOT rewrite agent .md files — only update opencode.json
-- If opencode.json doesn't exist, create it
+- Do NOT rewrite agent .md files — only update copilot-gsd.json
+- If copilot-gsd.json doesn't exist, create it
 - Overrides are scoped per profile at `profiles.custom_overrides.{profile}.{stage}`
-- **Source of truth:** `config.json` stores profiles/presets/overrides; `opencode.json` is **derived** from the effective models
-- When regenerating `opencode.json`, read the new profile from `config.json`, compute effective models (preset + overrides), then write the agent mappings
+- **Source of truth:** `config.json` stores profiles/presets/overrides; `copilot-gsd.json` is **derived** from the effective models
+- When regenerating `copilot-gsd.json`, read the new profile from `config.json`, compute effective models (preset + overrides), then write the agent mappings
 </notes>

@@ -71,7 +71,7 @@ Configuring models for: balanced
 - [ ] User selects a profile (or provides via argument)
 - [ ] User selects models for all three stages from available models
 - [ ] Profile preset is updated in `.planning/config.json`
-- [ ] `opencode.json` is regenerated if the modified profile is active
+- [ ] `copilot-gsd.json` is regenerated if the modified profile is active
 - [ ] Clear confirmation shown with updated model assignments
 
 </success_criteria>

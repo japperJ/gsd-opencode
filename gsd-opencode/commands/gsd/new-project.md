@@ -29,10 +29,10 @@ This is the most leveraged moment in any project. Deep questioning here means be
 
 <execution_context>
 
-@~/.config/opencode/get-shit-done/references/questioning.md
-@~/.config/opencode/get-shit-done/references/ui-brand.md
-@~/.config/opencode/get-shit-done/templates/project.md
-@~/.config/opencode/get-shit-done/templates/requirements.md
+@~/.claude/get-shit-done/references/questioning.md
+@~/.claude/get-shit-done/references/ui-brand.md
+@~/.claude/get-shit-done/templates/project.md
+@~/.claude/get-shit-done/templates/requirements.md
 
 </execution_context>
 
@@ -327,9 +327,9 @@ questions: [
     question: "Which AI models for planning agents?",
     multiSelect: false,
     options: [
-      { label: "Balanced", description: "planning/verifier: opencode/glm-4.7-free, execution: opencode/minimax-m2.1-free" },
-      { label: "Quality", description: "All stages: opencode/glm-4.7-free" },
-      { label: "Budget", description: "planning/verifier: opencode/minimax-m2.1-free, execution: opencode/grok-code" }
+      { label: "Balanced", description: "planning/verifier: opus, execution: sonnet" },
+      { label: "Quality", description: "All stages: opus" },
+      { label: "Budget", description: "planning/verifier: sonnet, execution: haiku" }
     ]
   }
 ]
@@ -348,19 +348,19 @@ Create `.planning/config.json` with all settings:
     "active_profile": "balanced",
     "presets": {
       "quality": {
-        "planning": "opencode/glm-4.7-free",
-        "execution": "opencode/glm-4.7-free",
-        "verification": "opencode/glm-4.7-free"
+        "planning": "opus",
+        "execution": "opus",
+        "verification": "opus"
       },
       "balanced": {
-        "planning": "opencode/glm-4.7-free",
-        "execution": "opencode/minimax-m2.1-free",
-        "verification": "opencode/glm-4.7-free"
+        "planning": "opus",
+        "execution": "sonnet",
+        "verification": "opus"
       },
       "budget": {
-        "planning": "opencode/minimax-m2.1-free",
-        "execution": "opencode/grok-code",
-        "verification": "opencode/minimax-m2.1-free"
+        "planning": "sonnet",
+        "execution": "haiku",
+        "verification": "sonnet"
       }
     },
     "custom_overrides": {
@@ -399,9 +399,9 @@ EOF
 )"
 ```
 
-**Generate opencode.json from active profile:**
+**Generate copilot-gsd.json from active profile:**
 
-Create `opencode.json` in the project root. This is a derived config that assigns a model to each GSD agent.
+Create `copilot-gsd.json` in the project root. This is a derived config that assigns a model to each GSD agent.
 
 Use the effective stage models from `.planning/config.json`:
 
@@ -409,11 +409,11 @@ Use the effective stage models from `.planning/config.json`:
 - execution model = `profiles.presets.{active_profile}.execution` (unless overridden)
 - verification model = `profiles.presets.{active_profile}.verification` (unless overridden)
 
-Write `opencode.json`:
+Write `copilot-gsd.json`:
 
 ```json
 {
-  "$schema": "https://opencode.ai/config.json",
+  "$schema": "copilot-gsd-config",
   "agent": {
     "gsd-planner": { "model": "{planning model}" },
     "gsd-plan-checker": { "model": "{planning model}" },
@@ -430,14 +430,14 @@ Write `opencode.json`:
 }
 ```
 
-**Commit opencode.json:**
+**Commit copilot-gsd.json:**
 
 ```bash
-git add opencode.json
-git commit -m "chore: configure opencode agent models"
+git add copilot-gsd.json
+git commit -m "chore: configure GSD agent model profiles"
 ```
 
-**Important:** OpenCode loads `opencode.json` at session start and does not hot-reload. If you change profiles later via `/gsd-set-profile` or `/gsd-settings`, run `/new` (or restart OpenCode) for it to take effect.
+**Important:** Copilot CLI loads `copilot-gsd.json` at session start and does not hot-reload. If you change profiles later via `/gsd-set-profile` or `/gsd-settings`, run `/new` (or restart Copilot CLI) for it to take effect.
 
 **Note:** Run `/gsd-settings` anytime to update these preferences.
 
@@ -539,9 +539,9 @@ Your STACK.md feeds into roadmap creation. Be prescriptive:
 
 <output>
 write to: .planning/research/STACK.md
-Use template: ~/.config/opencode/get-shit-done/templates/research-project/STACK.md
+Use template: ~/.claude/get-shit-done/templates/research-project/STACK.md
 </output>
-", subagent_type="gsd-project-researcher", model="{researcher_model}", description="Stack research")
+", subagent_type="general-purpose", model="{researcher_model}", description="Stack research")
 
 Task(prompt="
 <research_type>
@@ -578,9 +578,9 @@ Your FEATURES.md feeds into requirements definition. Categorize clearly:
 
 <output>
 write to: .planning/research/FEATURES.md
-Use template: ~/.config/opencode/get-shit-done/templates/research-project/FEATURES.md
+Use template: ~/.claude/get-shit-done/templates/research-project/FEATURES.md
 </output>
-", subagent_type="gsd-project-researcher", model="{researcher_model}", description="Features research")
+", subagent_type="general-purpose", model="{researcher_model}", description="Features research")
 
 Task(prompt="
 <research_type>
@@ -617,9 +617,9 @@ Your ARCHITECTURE.md informs phase structure in roadmap. Include:
 
 <output>
 write to: .planning/research/ARCHITECTURE.md
-Use template: ~/.config/opencode/get-shit-done/templates/research-project/ARCHITECTURE.md
+Use template: ~/.claude/get-shit-done/templates/research-project/ARCHITECTURE.md
 </output>
-", subagent_type="gsd-project-researcher", model="{researcher_model}", description="Architecture research")
+", subagent_type="general-purpose", model="{researcher_model}", description="Architecture research")
 
 Task(prompt="
 <research_type>
@@ -656,9 +656,9 @@ Your PITFALLS.md prevents mistakes in roadmap/planning. For each pitfall:
 
 <output>
 write to: .planning/research/PITFALLS.md
-Use template: ~/.config/opencode/get-shit-done/templates/research-project/PITFALLS.md
+Use template: ~/.claude/get-shit-done/templates/research-project/PITFALLS.md
 </output>
-", subagent_type="gsd-project-researcher", model="{researcher_model}", description="Pitfalls research")
+", subagent_type="general-purpose", model="{researcher_model}", description="Pitfalls research")
 ```
 
 After all 4 agents complete, spawn synthesizer to create SUMMARY.md:
@@ -679,10 +679,10 @@ read these files:
 
 <output>
 write to: .planning/research/SUMMARY.md
-Use template: ~/.config/opencode/get-shit-done/templates/research-project/SUMMARY.md
+Use template: ~/.claude/get-shit-done/templates/research-project/SUMMARY.md
 Commit after writing.
 </output>
-", subagent_type="gsd-research-synthesizer", model="{synthesizer_model}", description="Synthesize research")
+", subagent_type="general-purpose", model="{synthesizer_model}", description="Synthesize research")
 ```
 
 Display research complete banner and key findings:
@@ -887,7 +887,7 @@ Create roadmap:
 
 write files first, then return. This ensures artifacts persist even if context is lost.
 </instructions>
-", subagent_type="gsd-roadmapper", model="{roadmapper_model}", description="Create roadmap")
+", subagent_type="general-purpose", model="{roadmapper_model}", description="Create roadmap")
 ```
 
 **Handle roadmapper return:**
@@ -963,7 +963,7 @@ Use question:
   Update the roadmap based on feedback. edit files in place.
   Return ROADMAP REVISED with changes made.
   </revision>
-  ", subagent_type="gsd-roadmapper", model="{roadmapper_model}", description="Revise roadmap")
+  ", subagent_type="general-purpose", model="{roadmapper_model}", description="Revise roadmap")
   ```
 - Present revised roadmap
 - Loop until user approves

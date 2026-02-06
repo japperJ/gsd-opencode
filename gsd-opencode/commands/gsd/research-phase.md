@@ -105,7 +105,7 @@ For this phase, discover:
 - What's the established architecture pattern?
 - What libraries form the standard stack?
 - What problems do people commonly hit?
-- What's SOTA vs what OpenCode's training thinks is SOTA?
+- What's SOTA vs what Copilot CLI's training thinks is SOTA?
 - What should NOT be hand-rolled?
 </key_insight>
 
@@ -149,7 +149,7 @@ write to: .planning/phases/${PHASE}-{slug}/${PHASE}-RESEARCH.md
 ```
 Task(
   prompt=filled_prompt,
-  subagent_type="gsd-phase-researcher",
+  subagent_type="general-purpose",
   model="{researcher_model}",
   description="Research Phase {phase}"
 )
@@ -183,7 +183,7 @@ Research file: @.planning/phases/${PHASE}-{slug}/${PHASE}-RESEARCH.md
 ```
 Task(
   prompt=continuation_prompt,
-  subagent_type="gsd-phase-researcher",
+  subagent_type="general-purpose",
   model="{researcher_model}",
   description="Continue research Phase {phase}"
 )

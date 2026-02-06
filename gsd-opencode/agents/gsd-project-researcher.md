@@ -47,14 +47,14 @@ Your research files are consumed during roadmap creation:
 
 <philosophy>
 
-## OpenCode's Training as Hypothesis
+## Copilot CLI's Training as Hypothesis
 
-OpenCode's training data is 6-18 months stale. Treat pre-existing knowledge as hypothesis, not fact.
+Copilot CLI's training data is 6-18 months stale. Treat pre-existing knowledge as hypothesis, not fact.
 
-**The trap:** OpenCode "knows" things confidently. But that knowledge may be:
+**The trap:** Copilot CLI "knows" things confidently. But that knowledge may be:
 - Outdated (library has new major version)
 - Incomplete (feature was added after training)
-- Wrong (OpenCode misremembered or hallucinated)
+- Wrong (Copilot CLI misremembered or hallucinated)
 
 **The discipline:**
 1. **Verify before asserting** - Don't state library capabilities without checking Context7 or official docs

@@ -1,13 +1,13 @@
 <overview>
 Plans execute autonomously. Checkpoints formalize the interaction points where human verification or decisions are needed.
 
-**Core principle:** OpenCode automates everything with CLI/API. Checkpoints are for verification and decisions, not manual work.
+**Core principle:** Copilot CLI automates everything with CLI/API. Checkpoints are for verification and decisions, not manual work.
 
 **Golden rules:**
-1. **If OpenCode can run it, OpenCode runs it** - Never ask user to execute CLI commands, start servers, or run builds
-2. **OpenCode sets up the verification environment** - Start dev servers, seed databases, configure env vars
+1. **If Copilot CLI can run it, Copilot CLI runs it** - Never ask user to execute CLI commands, start servers, or run builds
+2. **Copilot CLI sets up the verification environment** - Start dev servers, seed databases, configure env vars
 3. **User only does what requires human judgment** - Visual checks, UX evaluation, "does this feel right?"
-4. **Secrets come from user, automation comes from OpenCode** - Ask for API keys, then OpenCode uses them via CLI
+4. **Secrets come from user, automation comes from Copilot CLI** - Ask for API keys, then Copilot CLI uses them via CLI
 </overview>
 
 <checkpoint_types>
@@ -15,7 +15,7 @@ Plans execute autonomously. Checkpoints formalize the interaction points where h
 <type name="human-verify">
 ## checkpoint:human-verify (Most Common - 90%)
 
-**When:** OpenCode completed automated work, human confirms it works correctly.
+**When:** Copilot CLI completed automated work, human confirms it works correctly.
 
 **Use for:**
 - Visual UI checks (layout, styling, responsiveness)
@@ -28,7 +28,7 @@ Plans execute autonomously. Checkpoints formalize the interaction points where h
 **Structure:**
 ```xml
 <task type="checkpoint:human-verify" gate="blocking">
-  <what-built>[What OpenCode automated and deployed/built]</what-built>
+  <what-built>[What Copilot CLI automated and deployed/built]</what-built>
   <how-to-verify>
     [Exact steps to test - URLs, commands, expected behavior]
   </how-to-verify>
@@ -37,7 +37,7 @@ Plans execute autonomously. Checkpoints formalize the interaction points where h
 ```
 
 **Key elements:**
-- `<what-built>`: What OpenCode automated (deployed, built, configured)
+- `<what-built>`: What Copilot CLI automated (deployed, built, configured)
 - `<how-to-verify>`: Exact steps to confirm it works (numbered, specific)
 - `<resume-signal>`: Clear indication of how to continue
 
@@ -93,7 +93,7 @@ Plans execute autonomously. Checkpoints formalize the interaction points where h
 </task>
 ```
 
-**Key pattern:** OpenCode starts the dev server BEFORE the checkpoint. User only needs to visit the URL.
+**Key pattern:** Copilot CLI starts the dev server BEFORE the checkpoint. User only needs to visit the URL.
 
 **Example: Xcode Build**
 ```xml
@@ -219,10 +219,10 @@ Plans execute autonomously. Checkpoints formalize the interaction points where h
 <type name="human-action">
 ## checkpoint:human-action (1% - Rare)
 
-**When:** Action has NO CLI/API and requires human-only interaction, OR OpenCode hit an authentication gate during automation.
+**When:** Action has NO CLI/API and requires human-only interaction, OR Copilot CLI hit an authentication gate during automation.
 
 **Use ONLY for:**
-- **Authentication gates** - OpenCode tried to use CLI/API but needs credentials to continue (this is NOT a failure)
+- **Authentication gates** - Copilot CLI tried to use CLI/API but needs credentials to continue (this is NOT a failure)
 - Email verification links (account creation requires clicking email)
 - SMS 2FA codes (phone verification)
 - Manual account approvals (platform requires human review before API access)
@@ -239,17 +239,17 @@ Plans execute autonomously. Checkpoints formalize the interaction points where h
 **Structure:**
 ```xml
 <task type="checkpoint:human-action" gate="blocking">
-  <action>[What human must do - OpenCode already did everything automatable]</action>
+  <action>[What human must do - Copilot CLI already did everything automatable]</action>
   <instructions>
-    [What OpenCode already automated]
+    [What Copilot CLI already automated]
     [The ONE thing requiring human action]
   </instructions>
-  <verification>[What OpenCode can check afterward]</verification>
+  <verification>[What Copilot CLI can check afterward]</verification>
   <resume-signal>[How to continue]</resume-signal>
 </task>
 ```
 
-**Key principle:** OpenCode automates EVERYTHING possible first, only asks human for the truly unavoidable manual step.
+**Key principle:** Copilot CLI automates EVERYTHING possible first, only asks human for the truly unavoidable manual step.
 
 **Example: Email Verification**
 ```xml
@@ -300,7 +300,7 @@ Plans execute autonomously. Checkpoints formalize the interaction points where h
   <verify>vercel ls shows deployment, curl returns 200</verify>
 </task>
 
-<!-- If vercel returns "Error: Not authenticated", OpenCode creates checkpoint on the fly -->
+<!-- If vercel returns "Error: Not authenticated", Copilot CLI creates checkpoint on the fly -->
 
 <task type="checkpoint:human-action" gate="blocking">
   <action>Authenticate Vercel CLI so I can continue deployment</action>
@@ -313,7 +313,7 @@ Plans execute autonomously. Checkpoints formalize the interaction points where h
   <resume-signal>Type "done" when authenticated</resume-signal>
 </task>
 
-<!-- After authentication, OpenCode retries the deployment -->
+<!-- After authentication, Copilot CLI retries the deployment -->
 
 <task type="auto">
   <name>Retry Vercel deployment</name>
@@ -322,13 +322,13 @@ Plans execute autonomously. Checkpoints formalize the interaction points where h
 </task>
 ```
 
-**Key distinction:** Authentication gates are created dynamically when OpenCode encounters auth errors during automation. They're NOT pre-planned - OpenCode tries to automate first, only asks for credentials when blocked.
+**Key distinction:** Authentication gates are created dynamically when Copilot CLI encounters auth errors during automation. They're NOT pre-planned - Copilot CLI tries to automate first, only asks for credentials when blocked.
 </type>
 </checkpoint_types>
 
 <execution_protocol>
 
-When OpenCode encounters `type="checkpoint:*"`:
+When Copilot CLI encounters `type="checkpoint:*"`:
 
 1. **Stop immediately** - do not proceed to next task
 2. **Display checkpoint clearly** using the format below
@@ -417,9 +417,9 @@ I'll verify: vercel whoami returns your account
 
 <authentication_gates>
 
-**Critical:** When OpenCode tries CLI/API and gets auth error, this is NOT a failure - it's a gate requiring human input to unblock automation.
+**Critical:** When Copilot CLI tries CLI/API and gets auth error, this is NOT a failure - it's a gate requiring human input to unblock automation.
 
-**Pattern:** OpenCode tries automation → auth error → creates checkpoint → you authenticate → OpenCode retries → continues
+**Pattern:** Copilot CLI tries automation → auth error → creates checkpoint → you authenticate → Copilot CLI retries → continues
 
 **Gate protocol:**
 1. Recognize it's not a failure - missing auth is expected
@@ -433,7 +433,7 @@ I'll verify: vercel whoami returns your account
 **Example execution flow (Vercel auth gate):**
 
 ```
-OpenCode: Running `vercel --yes` to deploy...
+Copilot CLI: Running `vercel --yes` to deploy...
 
 Error: Not authenticated. Please run 'vercel login'
 
@@ -459,7 +459,7 @@ I'll verify: vercel whoami returns your account
 
 User: done
 
-OpenCode: Verifying authentication...
+Copilot CLI: Verifying authentication...
 Running: vercel whoami
 ✓ Authenticated as: user@example.com
 
@@ -471,14 +471,14 @@ Task 3 complete. Continuing to task 4...
 ```
 
 **Key distinction:**
-- Pre-planned checkpoint: "I need you to do X" (wrong - OpenCode should automate)
+- Pre-planned checkpoint: "I need you to do X" (wrong - Copilot CLI should automate)
 - Auth gate: "I tried to automate X but need credentials" (correct - unblocks automation)
 
 </authentication_gates>
 
 <automation_reference>
 
-**The rule:** If it has CLI/API, OpenCode does it. Never ask human to perform automatable work.
+**The rule:** If it has CLI/API, Copilot CLI does it. Never ask human to perform automatable work.
 
 ## Service CLI Reference
 
@@ -518,7 +518,7 @@ Task 3 complete. Continuing to task 4...
   <instructions>Go to dashboard.convex.dev → Settings → Environment Variables → Add</instructions>
 </task>
 
-<!-- RIGHT: OpenCode asks for value, then adds via CLI -->
+<!-- RIGHT: Copilot CLI asks for value, then adds via CLI -->
 <task type="checkpoint:human-action">
   <action>Provide your OpenAI API key</action>
   <instructions>
@@ -539,7 +539,7 @@ Task 3 complete. Continuing to task 4...
 
 ## Dev Server Automation
 
-**OpenCode starts servers, user visits URLs:**
+**Copilot CLI starts servers, user visits URLs:**
 
 | Framework | Start Command | Ready Signal | Default URL |
 |-----------|---------------|--------------|-------------|
@@ -573,7 +573,7 @@ If default port is in use, check what's running and either:
 
 **Pattern:**
 ```xml
-<!-- OpenCode starts server before checkpoint -->
+<!-- Copilot CLI starts server before checkpoint -->
 <task type="auto">
   <name>Start dev server</name>
   <action>Run `npm run dev` in background, wait for ready signal</action>
@@ -661,7 +661,7 @@ If default port is in use, check what's running and either:
 
 ## Quick Reference
 
-| Action | Automatable? | OpenCode does it? |
+| Action | Automatable? | Copilot CLI does it? |
 |--------|--------------|-----------------|
 | Deploy to Vercel | Yes (`vercel`) | YES |
 | Create Stripe webhook | Yes (API) | YES |
@@ -691,20 +691,20 @@ If default port is in use, check what's running and either:
 - Make verification executable: clear, testable steps
 
 **DON'T:**
-- Ask human to do work OpenCode can automate (deploy, create resources, run builds)
+- Ask human to do work Copilot CLI can automate (deploy, create resources, run builds)
 - Assume knowledge: "Configure the usual settings" ❌
 - Skip steps: "Set up database" ❌ (too vague)
 - Mix multiple verifications in one checkpoint (split them)
-- Make verification impossible (OpenCode can't check visual appearance without user confirmation)
+- Make verification impossible (Copilot CLI can't check visual appearance without user confirmation)
 
 **Placement:**
-- **After automation completes** - not before OpenCode does the work
+- **After automation completes** - not before Copilot CLI does the work
 - **After UI buildout** - before declaring phase complete
 - **Before dependent work** - decisions before implementation
 - **At integration points** - after configuring external services
 
 **Bad placement:**
-- Before OpenCode automates (asking human to do automatable work) ❌
+- Before Copilot CLI automates (asking human to do automatable work) ❌
 - Too frequent (every other task is a checkpoint) ❌
 - Too late (checkpoint is last task, but earlier tasks needed its result) ❌
 </writing_guidelines>
@@ -714,7 +714,7 @@ If default port is in use, check what's running and either:
 ### Example 1: Deployment Flow (Correct)
 
 ```xml
-<!-- OpenCode automates everything -->
+<!-- Copilot CLI automates everything -->
 <task type="auto">
   <name>Deploy to Vercel</name>
   <files>.vercel/, vercel.json, package.json</files>
@@ -749,7 +749,7 @@ If default port is in use, check what's running and either:
 ### Example 2: Database Setup (No Checkpoint Needed)
 
 ```xml
-<!-- OpenCode automates everything -->
+<!-- Copilot CLI automates everything -->
 <task type="auto">
   <name>Create Upstash Redis database</name>
   <files>.env</files>
@@ -767,13 +767,13 @@ If default port is in use, check what's running and either:
   <done>Redis database created and configured</done>
 </task>
 
-<!-- NO CHECKPOINT NEEDED - OpenCode automated everything and verified programmatically -->
+<!-- NO CHECKPOINT NEEDED - Copilot CLI automated everything and verified programmatically -->
 ```
 
 ### Example 3: Stripe Webhooks (Correct)
 
 ```xml
-<!-- OpenCode automates everything -->
+<!-- Copilot CLI automates everything -->
 <task type="auto">
   <name>Configure Stripe webhooks</name>
   <files>.env, src/app/api/webhooks/route.ts</files>
@@ -833,7 +833,7 @@ If default port is in use, check what's running and either:
   <done>Dev server running at http://localhost:3000</done>
 </task>
 
-<!-- ONE checkpoint at end verifies the complete flow - OpenCode already started server -->
+<!-- ONE checkpoint at end verifies the complete flow - Copilot CLI already started server -->
 <task type="checkpoint:human-verify" gate="blocking">
   <what-built>Complete authentication flow - dev server running at http://localhost:3000</what-built>
   <how-to-verify>
@@ -864,9 +864,9 @@ If default port is in use, check what's running and either:
 </task>
 ```
 
-**Why bad:** OpenCode can run `npm run dev`. User should only visit URLs, not execute commands.
+**Why bad:** Copilot CLI can run `npm run dev`. User should only visit URLs, not execute commands.
 
-### ✅ GOOD: OpenCode starts server, user visits
+### ✅ GOOD: Copilot CLI starts server, user visits
 
 ```xml
 <task type="auto">
@@ -899,9 +899,9 @@ If default port is in use, check what's running and either:
 </task>
 ```
 
-**Why bad:** Convex has `npx convex env set`. OpenCode should ask for the key value, then run the CLI command.
+**Why bad:** Convex has `npx convex env set`. Copilot CLI should ask for the key value, then run the CLI command.
 
-### ✅ GOOD: OpenCode collects secret, adds via CLI
+### ✅ GOOD: Copilot CLI collects secret, adds via CLI
 
 ```xml
 <task type="checkpoint:human-action" gate="blocking">
@@ -937,9 +937,9 @@ If default port is in use, check what's running and either:
 </task>
 ```
 
-**Why bad:** Vercel has a CLI. OpenCode should run `vercel --yes`.
+**Why bad:** Vercel has a CLI. Copilot CLI should run `vercel --yes`.
 
-### ✅ GOOD: OpenCode automates, human verifies
+### ✅ GOOD: Copilot CLI automates, human verifies
 
 ```xml
 <task type="auto">
@@ -995,7 +995,7 @@ If default port is in use, check what's running and either:
 </task>
 ```
 
-**Why bad:** OpenCode has write tool. This should be `type="auto"`.
+**Why bad:** Copilot CLI has write tool. This should be `type="auto"`.
 
 ### ❌ BAD: Vague verification steps
 
@@ -1038,7 +1038,7 @@ If default port is in use, check what's running and either:
 </task>
 ```
 
-**Why bad:** OpenCode can run these commands. User should never execute CLI commands.
+**Why bad:** Copilot CLI can run these commands. User should never execute CLI commands.
 
 ### ❌ BAD: Asking user to copy values between services
 
@@ -1055,24 +1055,24 @@ If default port is in use, check what's running and either:
 </task>
 ```
 
-**Why bad:** Stripe has an API. OpenCode should create the webhook via API and write to .env directly.
+**Why bad:** Stripe has an API. Copilot CLI should create the webhook via API and write to .env directly.
 
 </anti_patterns>
 
 <summary>
 
-Checkpoints formalize human-in-the-loop points. Use them when OpenCode cannot complete a task autonomously OR when human verification is required for correctness.
+Checkpoints formalize human-in-the-loop points. Use them when Copilot CLI cannot complete a task autonomously OR when human verification is required for correctness.
 
-**The golden rule:** If OpenCode CAN automate it, OpenCode MUST automate it.
+**The golden rule:** If Copilot CLI CAN automate it, Copilot CLI MUST automate it.
 
 **Checkpoint priority:**
-1. **checkpoint:human-verify** (90% of checkpoints) - OpenCode automated everything, human confirms visual/functional correctness
+1. **checkpoint:human-verify** (90% of checkpoints) - Copilot CLI automated everything, human confirms visual/functional correctness
 2. **checkpoint:decision** (9% of checkpoints) - Human makes architectural/technology choices
 3. **checkpoint:human-action** (1% of checkpoints) - Truly unavoidable manual steps with no API/CLI
 
 **When NOT to use checkpoints:**
-- Things OpenCode can verify programmatically (tests pass, build succeeds)
-- File operations (OpenCode can read files to verify)
+- Things Copilot CLI can verify programmatically (tests pass, build succeeds)
+- File operations (Copilot CLI can read files to verify)
 - Code correctness (use tests and static analysis)
 - Anything automatable via CLI/API
 </summary>

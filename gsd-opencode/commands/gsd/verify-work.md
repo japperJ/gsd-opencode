@@ -15,14 +15,14 @@ tools:
 <objective>
 Validate built features through conversational testing with persistent state.
 
-Purpose: Confirm what OpenCode built actually works from user's perspective. One test at a time, plain text responses, no interrogation. When issues are found, automatically diagnose, plan fixes, and prepare for execution.
+Purpose: Confirm what Copilot CLI built actually works from user's perspective. One test at a time, plain text responses, no interrogation. When issues are found, automatically diagnose, plan fixes, and prepare for execution.
 
 Output: {phase}-UAT.md tracking all test results. If issues found: diagnosed gaps, verified fix plans ready for /gsd-execute-phase
 </objective>
 
 <execution_context>
-@~/.config/opencode/get-shit-done/workflows/verify-work.md
-@~/.config/opencode/get-shit-done/templates/UAT.md
+@~/.claude/get-shit-done/workflows/verify-work.md
+@~/.claude/get-shit-done/templates/UAT.md
 </execution_context>
 
 <context>

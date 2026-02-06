@@ -211,10 +211,10 @@ Execute each wave in sequence. Autonomous plans within a wave run in parallel.
    </objective>
 
    <execution_context>
-   @~/.config/opencode/get-shit-done/workflows/execute-plan.md
-   @~/.config/opencode/get-shit-done/templates/summary.md
-   @~/.config/opencode/get-shit-done/references/checkpoints.md
-   @~/.config/opencode/get-shit-done/references/tdd.md
+   @~/.claude/get-shit-done/workflows/execute-plan.md
+   @~/.claude/get-shit-done/templates/summary.md
+   @~/.claude/get-shit-done/references/checkpoints.md
+   @~/.claude/get-shit-done/references/tdd.md
    </execution_context>
 
    <context>
@@ -294,7 +294,7 @@ Plans with `autonomous: false` require user interaction.
 
 1. **Spawn agent for checkpoint plan:**
    ```
-   Task(prompt="{subagent-task-prompt}", subagent_type="gsd-executor", model="{executor_model}")
+   Task(prompt="{subagent-task-prompt}", subagent_type="general-purpose", model="{executor_model}")
    ```
 
 2. **Agent runs until checkpoint:**
@@ -333,7 +333,7 @@ Plans with `autonomous: false` require user interaction.
    ```
    Task(
      prompt=filled_continuation_template,
-     subagent_type="gsd-executor",
+     subagent_type="general-purpose",
      model="{executor_model}"
    )
    ```
@@ -354,7 +354,7 @@ Plans with `autonomous: false` require user interaction.
 8. **Repeat until plan completes or user stops**
 
 **Why fresh agent instead of resume:**
-Resume relies on OpenCode's internal serialization which breaks with parallel tool calls.
+Resume relies on Copilot CLI's internal serialization which breaks with parallel tool calls.
 Fresh agents with explicit state are more reliable and maintain full context.
 
 **Checkpoint in parallel context:**
@@ -410,7 +410,7 @@ Phase goal: {goal from ROADMAP.md}
 
 Check must_haves against actual codebase. Create VERIFICATION.md.
 Verify what actually exists in the code.",
-  subagent_type="gsd-verifier",
+  subagent_type="general-purpose",
   model="{verifier_model}"
 )
 ```

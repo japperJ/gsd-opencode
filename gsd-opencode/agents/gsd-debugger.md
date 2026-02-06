@@ -31,7 +31,7 @@ Your job: Find the root cause through hypothesis testing, maintain debug file st
 
 <philosophy>
 
-## User = Reporter, OpenCode = Investigator
+## User = Reporter, Copilot CLI = Investigator
 
 The user knows:
 - What they expected to happen

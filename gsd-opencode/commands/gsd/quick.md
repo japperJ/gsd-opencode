@@ -165,7 +165,7 @@ write plan to: ${QUICK_DIR}/${next_num}-PLAN.md
 Return: ## PLANNING COMPLETE with plan path
 </output>
 ",
-  subagent_type="gsd-planner",
+  subagent_type="general-purpose",
   model="{planner_model}",
   description="Quick plan: ${DESCRIPTION}"
 )
@@ -199,7 +199,7 @@ Project state: @.planning/STATE.md
 - Do NOT update ROADMAP.md (quick tasks are separate from planned phases)
 </constraints>
 ",
-  subagent_type="gsd-executor",
+  subagent_type="general-purpose",
   model="{executor_model}",
   description="Execute: ${DESCRIPTION}"
 )
@@ -268,7 +268,7 @@ docs(quick-${next_num}): ${DESCRIPTION}
 
 Quick task completed.
 
-Co-Authored-By: OpenCode Opus 4.5 <noreply@anthropic.com>
+Co-Authored-By: Copilot CLI Opus 4.5 <noreply@anthropic.com>
 EOF
 )"
 ```

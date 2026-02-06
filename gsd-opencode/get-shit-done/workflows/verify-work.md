@@ -1,13 +1,13 @@
 <purpose>
 Validate built features through conversational testing with persistent state. Creates UAT.md that tracks test progress, survives /new, and feeds gaps into /gsd-plan-phase --gaps.
 
-User tests, OpenCode records. One test at a time. Plain text responses.
+User tests, Copilot CLI records. One test at a time. Plain text responses.
 </purpose>
 
 <philosophy>
 **Show expected, ask if reality matches.**
 
-OpenCode presents what SHOULD happen. User confirms or describes what's different.
+Copilot CLI presents what SHOULD happen. User confirms or describes what's different.
 - "yes" / "y" / "next" / empty → pass
 - Anything else → logged as issue, severity inferred
 
@@ -15,7 +15,7 @@ No Pass/Fail buttons. No severity questions. Just: "Here's what should happen. D
 </philosophy>
 
 <template>
-@~/.config/opencode/get-shit-done/templates/UAT.md
+@~/.claude/get-shit-done/templates/UAT.md
 </template>
 
 <process>
@@ -360,7 +360,7 @@ Spawning parallel debug agents to investigate each issue.
 ```
 
 - Load diagnose-issues workflow
-- Follow @~/.config/opencode/get-shit-done/workflows/diagnose-issues.md
+- Follow @~/.claude/get-shit-done/workflows/diagnose-issues.md
 - Spawn parallel debug agents for each issue
 - Collect root causes
 - Update UAT.md with root causes
@@ -407,7 +407,7 @@ Output consumed by /gsd-execute-phase
 Plans must be executable prompts.
 </downstream_consumer>
 """,
-  subagent_type="gsd-planner",
+  subagent_type="general-purpose",
   model="{planner_model}",
   description="Plan gap fixes for Phase {phase}"
 )
@@ -453,7 +453,7 @@ Return one of:
 - ## ISSUES FOUND — structured issue list
 </expected_output>
 """,
-  subagent_type="gsd-plan-checker",
+  subagent_type="general-purpose",
   model="{checker_model}",
   description="Verify Phase {phase} fix plans"
 )
@@ -494,7 +494,7 @@ read existing PLAN.md files. Make targeted updates to address checker issues.
 Do NOT replan from scratch unless issues are fundamental.
 </instructions>
 """,
-  subagent_type="gsd-planner",
+  subagent_type="general-purpose",
   model="{planner_model}",
   description="Revise Phase {phase} plans"
 )

@@ -15,7 +15,7 @@ Shows version comparison, changelog entries for missed versions, and update inst
 read installed version from VERSION file:
 
 ```bash
-cat ~/.config/opencode/get-shit-done/VERSION 2>/dev/null
+cat ~/.claude/get-shit-done/VERSION 2>/dev/null
 ```
 
 **If VERSION file missing:**
@@ -26,7 +26,7 @@ cat ~/.config/opencode/get-shit-done/VERSION 2>/dev/null
 
 Your installation doesn't include version tracking.
 
-**To fix:** `npx gsd-opencode --global`
+**To fix:** `npx gsd-copilot-cli --global`
 
 This will reinstall with version tracking enabled.
 ```
@@ -38,13 +38,13 @@ STOP here if no VERSION file.
 Fetch latest CHANGELOG.md from GitHub:
 
 Use webfetch tool with:
-- URL: `https://raw.githubusercontent.com/rokicool/gsd-opencode/main/CHANGELOG.md`
+- URL: `CHANGELOG.md`
 - Prompt: "Extract all version entries with their dates and changes. Return in Keep-a-Changelog format."
 
 **If fetch fails:**
 Fall back to local changelog:
 ```bash
-cat ~/.config/opencode/get-shit-done/CHANGELOG.md 2>/dev/null
+cat ~/.claude/get-shit-done/CHANGELOG.md 2>/dev/null
 ```
 
 Note to user: "Couldn't check for updates (offline or GitHub unavailable). Showing local changelog."
@@ -75,7 +75,7 @@ Format output clearly:
 
 You're on the latest version.
 
-[View full changelog](https://github.com/rokicool/gsd-opencode/blob/main/CHANGELOG.md)
+[View full changelog](https://CHANGELOG.md)
 ```
 
 **If updates available:**
@@ -105,9 +105,9 @@ You're on the latest version.
 
 ---
 
-[View full changelog](https://github.com/rokicool/gsd-opencode/blob/main/CHANGELOG.md)
+[View full changelog](https://CHANGELOG.md)
 
-**To update:** `npx gsd-opencode --global`
+**To update:** `npx gsd-copilot-cli --global`
 ```
 
 **Breaking changes:** Surface prominently with **BREAKING:** prefix in the output.

@@ -6,7 +6,7 @@ description: Update GSD to latest version with changelog display
 <objective>
 Check for GSD updates, install if available, and display what changed.
 
-Provides a better update experience than raw `npx gsd-opencode` by showing version diff and changelog entries.
+Provides a better update experience than raw `npx gsd-copilot-cli` by showing version diff and changelog entries.
 </objective>
 
 <process>
@@ -15,7 +15,7 @@ Provides a better update experience than raw `npx gsd-opencode` by showing versi
 read installed version:
 
 ```bash
-cat ~/.config/opencode/get-shit-done/VERSION 2>/dev/null
+cat ~/.claude/get-shit-done/VERSION 2>/dev/null
 ```
 
 **If VERSION file missing:**
@@ -36,14 +36,14 @@ Proceed to install step (treat as version 0.0.0 for comparison).
 Check npm for latest version:
 
 ```bash
-npm view gsd-opencode version 2>/dev/null
+npm view gsd-copilot-cli version 2>/dev/null
 ```
 
 **If npm check fails:**
 ```
 Couldn't check for updates (offline or npm unavailable).
 
-To update manually: `npx gsd-opencode@latest --global`
+To update manually: `npx gsd-copilot-cli@latest --global`
 ```
 
 STOP here if npm unavailable.
@@ -106,12 +106,12 @@ STOP here if ahead.
 ────────────────────────────────────────────────────────────
 
 ⚠️  **Note:** The installer performs a clean install of GSD folders:
-- `~/.config/opencode/commands/gsd/` will be wiped and replaced
-- `~/.config/opencode/get-shit-done/` will be wiped and replaced
-- `~/.config/opencode/agents/gsd-*` files will be replaced
+- `~/.claude/commands/gsd/` will be wiped and replaced
+- `~/.claude/get-shit-done/` will be wiped and replaced
+- `~/.claude/agents/gsd-*` files will be replaced
 
 Your custom files in other locations are preserved:
-- Custom commands in `~/.config/opencode/commands/your-stuff/` ✓
+- Custom commands in `~/.claude/commands/your-stuff/` ✓
 - Custom agents not prefixed with `gsd-` ✓
 - Custom hooks ✓
 - Your CLAUDE.md files ✓
@@ -132,7 +132,7 @@ Use question:
 Run the update:
 
 ```bash
-npx gsd-opencode@latest --global
+npx gsd-copilot-cli@latest --global
 ```
 
 Capture output. If install fails, show error and STOP.
@@ -140,7 +140,7 @@ Capture output. If install fails, show error and STOP.
 Clear the update cache so statusline indicator disappears:
 
 ```bash
-rm -f ~/.config/opencode/cache/gsd-update-check.json
+rm -f ~/.claude/cache/gsd-update-check.json
 ```
 </step>
 
@@ -152,9 +152,9 @@ Format completion message (changelog was already shown in confirmation step):
 ║  GSD Updated: v1.5.10 → v1.5.15                           ║
 ╚═══════════════════════════════════════════════════════════╝
 
-⚠️  Restart OpenCode to pick up the new commands.
+⚠️  Restart Copilot CLI to pick up the new commands.
 
-[View full changelog](https://github.com/rokicool/gsd-opencode/blob/main/CHANGELOG.md)
+[View full changelog](https://CHANGELOG.md)
 ```
 </step>
 

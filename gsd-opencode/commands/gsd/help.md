@@ -17,7 +17,7 @@ Output ONLY the reference content below. Do NOT add:
 <reference>
 # GSD Command Reference
 
-**GSD** (Get Shit Done) creates hierarchical project plans optimized for solo agentic development with OpenCode.
+**GSD** (Get Shit Done) creates hierarchical project plans optimized for solo agentic development with Copilot CLI.
 
 ## Quick Start
 
@@ -36,7 +36,7 @@ GSD evolves fast. Check for updates periodically:
 Shows what changed since your installed version. Update with:
 
 ```bash
-npx gsd-opencode@latest
+npx gsd-copilot-cli@latest
 ```
 
 ## Core Workflow
@@ -98,10 +98,10 @@ Comprehensive ecosystem research for niche/complex domains.
 Usage: `/gsd-research-phase 3`
 
 **`/gsd-list-phase-assumptions <number>`**
-See what OpenCode is planning to do before it starts.
+See what Copilot CLI is planning to do before it starts.
 
-- Shows OpenCode's intended approach for a phase
-- Lets you course-correct if OpenCode misunderstood your vision
+- Shows Copilot CLI's intended approach for a phase
+- Lets you course-correct if Copilot CLI misunderstood your vision
 - No files created - conversational output only
 
 Usage: `/gsd-list-phase-assumptions 3`
@@ -348,7 +348,7 @@ Update GSD to latest version with changelog preview.
 
 - Shows what changed before updating
 - Confirms before running install
-- Better than raw `npx gsd-opencode`
+- Better than raw `npx gsd-copilot-cli`
 
 Usage: `/gsd-update`
 

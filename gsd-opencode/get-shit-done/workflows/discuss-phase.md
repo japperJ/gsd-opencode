@@ -13,7 +13,7 @@ You are a thinking partner, not an interviewer. The user is the visionary — yo
 
 2. **gsd-planner** — Reads CONTEXT.md to know WHAT decisions are locked
    - "Pull-to-refresh on mobile" → planner includes that in task specs
-   - "OpenCode's Discretion: loading skeleton" → planner can decide approach
+   - "Copilot CLI's Discretion: loading skeleton" → planner can decide approach
 
 **Your job:** Capture decisions clearly enough that downstream agents can act on them without asking the user again.
 
@@ -21,7 +21,7 @@ You are a thinking partner, not an interviewer. The user is the visionary — yo
 </downstream_awareness>
 
 <philosophy>
-**User = founder/visionary. OpenCode = builder.**
+**User = founder/visionary. Copilot CLI = builder.**
 
 The user knows:
 - How they imagine it working
@@ -98,7 +98,7 @@ Phase: "API documentation"
 
 **The key question:** What decisions would change the outcome that the user should weigh in on?
 
-**OpenCode handles these (don't ask):**
+**Copilot CLI handles these (don't ask):**
 - Technical implementation details
 - Architecture patterns
 - Performance optimization
@@ -244,7 +244,7 @@ Ask 4 questions per area before offering to continue or move on. Each answer oft
    - header: "[Area]"
    - question: Specific decision for this area
    - options: 2-3 concrete choices (question adds "Other" automatically)
-   - Include "You decide" as an option when reasonable — captures OpenCode discretion
+   - Include "You decide" as an option when reasonable — captures Copilot CLI discretion
 
 3. **After 4 questions, check:**
    - header: "[Area]"
@@ -320,8 +320,8 @@ fi
 ### [Category 2 that was discussed]
 - [Decision or preference captured]
 
-### OpenCode's Discretion
-[Areas where user said "you decide" — note that OpenCode has flexibility here]
+### Copilot CLI's Discretion
+[Areas where user said "you decide" — note that Copilot CLI has flexibility here]
 
 </decisions>
 

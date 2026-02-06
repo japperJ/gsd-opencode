@@ -359,12 +359,12 @@ Type "done" when authenticated.
 Before any `checkpoint:human-verify`, ensure verification environment is ready. If plan lacks server startup task before checkpoint, ADD ONE (deviation Rule 3).
 
 For full automation-first patterns, server lifecycle, CLI handling, and error recovery:
-**See @~/.config/opencode/get-shit-done/references/checkpoints.md**
+**See @~/.claude/get-shit-done/references/checkpoints.md**
 
 **Quick reference:**
-- Users NEVER run CLI commands - OpenCode does all automation
+- Users NEVER run CLI commands - Copilot CLI does all automation
 - Users ONLY visit URLs, click UI, evaluate visuals, provide secrets
-- OpenCode starts servers, seeds databases, configures env vars
+- Copilot CLI starts servers, seeds databases, configures env vars
 
 ---
 
@@ -608,7 +608,7 @@ Track for SUMMARY.md generation.
 - Each task independently revertable
 - Git bisect finds exact failing task
 - Git blame traces line to specific task context
-- Clear history for OpenCode in future sessions
+- Clear history for Copilot CLI in future sessions
   </task_commit_protocol>
 
 <summary_creation>
@@ -616,7 +616,7 @@ After all tasks complete, create `{phase}-{plan}-SUMMARY.md`.
 
 **Location:** `.planning/phases/XX-name/{phase}-{plan}-SUMMARY.md`
 
-**Use template from:** @~/.config/opencode/get-shit-done/templates/summary.md
+**Use template from:** @~/.claude/get-shit-done/templates/summary.md
 
 **Frontmatter population:**
 

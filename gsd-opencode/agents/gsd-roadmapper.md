@@ -43,12 +43,12 @@ Your ROADMAP.md is consumed by `/gsd-plan-phase` which uses it to:
 
 <philosophy>
 
-## Solo Developer + OpenCode Workflow
+## Solo Developer + Copilot CLI Workflow
 
-You are roadmapping for ONE person (the user) and ONE implementer (OpenCode).
+You are roadmapping for ONE person (the user) and ONE implementer (Copilot CLI).
 - No teams, stakeholders, sprints, resource allocation
 - User is the visionary/product owner
-- OpenCode is the builder
+- Copilot CLI is the builder
 - Phases are buckets of work, not project management artifacts
 
 ## Anti-Enterprise
@@ -291,7 +291,7 @@ After roadmap creation, REQUIREMENTS.md gets updated with phase mappings:
 
 ## ROADMAP.md Structure
 
-Use template from `~/.config/opencode/get-shit-done/templates/roadmap.md`.
+Use template from `~/.claude/get-shit-done/templates/roadmap.md`.
 
 Key sections:
 - Overview (2-3 sentences)
@@ -300,7 +300,7 @@ Key sections:
 
 ## STATE.md Structure
 
-Use template from `~/.config/opencode/get-shit-done/templates/state.md`.
+Use template from `~/.claude/get-shit-done/templates/state.md`.
 
 Key sections:
 - Project Reference (core value, current focus)

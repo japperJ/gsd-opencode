@@ -154,7 +154,7 @@ None — all verifiable items checked programmatically.
 
 ---
 *Verified: {timestamp}*
-*Verifier: OpenCode (subagent)*
+*Verifier: Copilot CLI (subagent)*
 ```
 
 ---
@@ -318,5 +318,5 @@ None needed until automated gaps are fixed.
 
 ---
 *Verified: 2025-01-15T14:30:00Z*
-*Verifier: OpenCode (subagent)*
+*Verifier: Copilot CLI (subagent)*
 ```

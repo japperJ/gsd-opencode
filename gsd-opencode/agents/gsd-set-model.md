@@ -13,7 +13,7 @@ You are executing the `/gsd-set-model` command. Configure the models assigned to
 
 This command reads/writes two files:
 - `.planning/config.json` — profile state (active_profile, presets, custom_overrides)
-- `opencode.json` — agent model assignments (OpenCode's native config)
+- `copilot-gsd.json` — agent model assignments (Copilot CLI's native config)
 
 Do NOT modify agent .md files. This command updates profile presets, not overrides.
 </role>
@@ -115,22 +115,22 @@ Current configuration:
 Run:
 
 ```bash
-opencode models 2>/dev/null
+# Available models: opus, sonnet, haiku 2>/dev/null
 ```
 
 Parse the output to extract model IDs in `provider/model` format. Store these in a list for validation.
 
 If command fails or returns no models:
 ```text
-Error: Could not fetch available models. Check your OpenCode installation.
+Error: Could not fetch available models. Check your Copilot CLI installation.
 ```
 Stop.
 
-**Print** the tip below after running opencode models:
+**Print** the tip below after running # Available models: opus, sonnet, haiku:
 
 ```text
-Tip: Models prefixed with "opencode/" require an OpenCode Zen subscription.
-     To see only one provider's models: opencode models <provider>
+Tip: Models available as require an Copilot CLI Zen subscription.
+     To see only one provider's models: # Available models: opus, sonnet, haiku <provider>
 ```
 
 ### 3c. Print input instructions
@@ -213,9 +213,9 @@ Use the **write tool directly** to update files. Do NOT use bash, python, or oth
     - Set `config.profiles.presets[targetProfile].verification` to selected value
     - Write the config file (preserve all other keys)
 
-2. **Update opencode.json (only if targetProfile is active):**
+2. **Update copilot-gsd.json (only if targetProfile is active):**
 
-Check if `config.profiles.active_profile === targetProfile`. If so, regenerate `opencode.json` with the new effective models.
+Check if `config.profiles.active_profile === targetProfile`. If so, regenerate `copilot-gsd.json` with the new effective models.
 
 Compute effective models (preset + overrides):
 ```
@@ -229,7 +229,7 @@ Build agent config:
 
 ```json
 {
-  "$schema": "https://opencode.ai/config.json",
+  "$schema": "copilot-gsd-config",
   "agent": {
     "gsd-planner": { "model": "{effective.planning}" },
     "gsd-plan-checker": { "model": "{effective.planning}" },
@@ -249,7 +249,7 @@ Build agent config:
 }
 ```
 
-If `opencode.json` already exists, merge the `agent` key (preserve other top-level keys).
+If `copilot-gsd.json` already exists, merge the `agent` key (preserve other top-level keys).
 
 3. **Report success:**
 
@@ -265,7 +265,7 @@ If `opencode.json` already exists, merge the `agent` key (preserve other top-lev
 
 If `targetProfile` is the active profile:
 ```text
-Note: This is your active profile. Quit and relaunch OpenCode to apply model changes.
+Note: This is your active profile. Quit and relaunch Copilot CLI to apply model changes.
 ```
 
 If `targetProfile` is NOT the active profile:
@@ -278,10 +278,10 @@ To use this profile, run: /gsd-set-profile {targetProfile}
 <notes>
 - Display available models first, then accept free-form input for model selection
 - Validate entered model IDs against the available models list
-- Always show full model IDs (e.g., `opencode/claude-sonnet-4`)
+- Always show full model IDs (e.g., `sonnet`, `opus`, `haiku`)
 - Preserve all other config.json keys when writing (deep merge)
-- Do NOT rewrite agent .md files — only update config.json and opencode.json
+- Do NOT rewrite agent .md files — only update config.json and copilot-gsd.json
 - This command modifies **presets**, not overrides. Use `/gsd-settings` for per-stage overrides.
-- **Source of truth:** `config.json` stores profiles/presets/overrides; `opencode.json` is **derived** from the effective models
-- OpenCode shows all available models regardless of subscription status. Users without Zen can filter with `opencode models github-copilot`
+- **Source of truth:** `config.json` stores profiles/presets/overrides; `copilot-gsd.json` is **derived** from the effective models
+- Copilot CLI shows all available models regardless of subscription status. Users without Zen can filter with `# Available models: opus, sonnet, haiku github-copilot`
 </notes>

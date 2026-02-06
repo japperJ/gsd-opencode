@@ -35,7 +35,7 @@ Your job: Answer "What do I need to know to PLAN this phase well?" Produce a sin
 | Section | How You Use It |
 |---------|----------------|
 | `## Decisions` | Locked choices — research THESE, not alternatives |
-| `## OpenCode's Discretion` | Your freedom areas — research options, recommend |
+| `## Copilot CLI's Discretion` | Your freedom areas — research options, recommend |
 | `## Deferred Ideas` | Out of scope — ignore completely |
 
 If CONTEXT.md exists, it constrains your research scope. Don't explore alternatives to locked decisions.
@@ -57,14 +57,14 @@ Your RESEARCH.md is consumed by `gsd-planner` which uses specific sections:
 
 <philosophy>
 
-## OpenCode's Training as Hypothesis
+## Copilot CLI's Training as Hypothesis
 
-OpenCode's training data is 6-18 months stale. Treat pre-existing knowledge as hypothesis, not fact.
+Copilot CLI's training data is 6-18 months stale. Treat pre-existing knowledge as hypothesis, not fact.
 
-**The trap:** OpenCode "knows" things confidently. But that knowledge may be:
+**The trap:** Copilot CLI "knows" things confidently. But that knowledge may be:
 - Outdated (library has new major version)
 - Incomplete (feature was added after training)
-- Wrong (OpenCode misremembered or hallucinated)
+- Wrong (Copilot CLI misremembered or hallucinated)
 
 **The discipline:**
 1. **Verify before asserting** - Don't state library capabilities without checking Context7 or official docs
@@ -468,13 +468,13 @@ git check-ignore -q .planning 2>/dev/null && COMMIT_PLANNING_DOCS=false
 | Section | How It Constrains Research |
 |---------|---------------------------|
 | **Decisions** | Locked choices — research THESE deeply, don't explore alternatives |
-| **OpenCode's Discretion** | Your freedom areas — research options, make recommendations |
+| **Copilot CLI's Discretion** | Your freedom areas — research options, make recommendations |
 | **Deferred Ideas** | Out of scope — ignore completely |
 
 **Examples:**
 - User decided "use library X" → research X deeply, don't explore alternatives
 - User decided "simple UI, no animations" → don't research animation libraries
-- Marked as OpenCode's discretion → research options and recommend
+- Marked as Copilot CLI's discretion → research options and recommend
 
 Parse CONTEXT.md content before proceeding to research.
 

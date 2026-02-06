@@ -179,6 +179,6 @@ See: .planning/PROJECT.md (updated [date])
 **Current focus:** [Current phase name]
 ```
 
-This ensures OpenCode reads current PROJECT.md context.
+This ensures Copilot CLI reads current PROJECT.md context.
 
 </state_reference>

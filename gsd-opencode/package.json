@@ -1,33 +1,26 @@
 {
-  "name": "gsd-opencode",
-  "version": "1.9.0",
-  "description": "A meta-prompting, context engineering and spec-driven development system for OpenCode by TÂCHES.",
+  "name": "gsd-copilot-cli",
+  "version": "1.0.0",
+  "description": "A meta-prompting, context engineering and spec-driven development system for GitHub Copilot CLI / Claude Code. Adapted from gsd-opencode by TÂCHES & rokicool.",
   "keywords": [
-    "opencode",
+    "copilot-cli",
+    "claude-code",
     "ai",
     "meta-prompting",
     "context-engineering",
     "spec-driven-development"
   ],
-  "homepage": "https://github.com/rokicool/gsd-opencode#readme",
-  "bugs": {
-    "url": "https://github.com/rokicool/gsd-opencode/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rokicool/gsd-opencode.git"
-  },
   "license": "MIT",
-  "author": "TÂCHES & rokicool",
+  "author": "TÂCHES & rokicool (adapted for Copilot CLI)",
   "type": "commonjs",
   "main": "index.js",
   "bin": {
-    "gsd-opencode": "bin/install.js"
+    "gsd-copilot-cli": "bin/install.js"
   },
   "files": [
     "agents",
     "bin",
-    "command",
+    "commands",
     "get-shit-done"
   ],
   "scripts": {

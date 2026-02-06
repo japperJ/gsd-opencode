@@ -15,7 +15,7 @@ tools:
 ---
 
 <execution_context>
-@~/.config/opencode/get-shit-done/references/ui-brand.md
+@~/.claude/get-shit-done/references/ui-brand.md
 </execution_context>
 
 <objective>
@@ -207,7 +207,7 @@ write research findings to: {phase_dir}/{phase}-RESEARCH.md
 ```
 Task(
   prompt=research_prompt,
-  subagent_type="gsd-phase-researcher",
+  subagent_type="general-purpose",
   model="{researcher_model}",
   description="Research Phase {phase}"
 )
@@ -316,7 +316,7 @@ Before returning PLANNING COMPLETE:
 ```
 Task(
   prompt=filled_prompt,
-  subagent_type="gsd-planner",
+  subagent_type="general-purpose",
   model="{planner_model}",
   description="Plan Phase {phase}"
 )
@@ -388,7 +388,7 @@ Return one of:
 ```
 Task(
   prompt=checker_prompt,
-  subagent_type="gsd-plan-checker",
+  subagent_type="general-purpose",
   model="{checker_model}",
   description="Verify Phase {phase} plans"
 )
@@ -446,7 +446,7 @@ Return what changed.
 ```
 Task(
   prompt=revision_prompt,
-  subagent_type="gsd-planner",
+  subagent_type="general-purpose",
   model="{planner_model}",
   description="Revise Phase {phase} plans"
 )

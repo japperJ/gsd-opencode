@@ -14,7 +14,7 @@ Enables seamless session continuity for fully autonomous workflows.
 </purpose>
 
 <required_reading>
-@~/.config/opencode/get-shit-done/references/continuation-format.md
+@~/.claude/get-shit-done/references/continuation-format.md
 </required_reading>
 
 <process>

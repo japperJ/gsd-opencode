@@ -1,6 +1,6 @@
 # Model Profiles
 
-Model profiles control which OpenCode model each GSD agent uses. This allows balancing quality vs token spend.
+Model profiles control which Copilot CLI model each GSD agent uses. This allows balancing quality vs token spend.
 
 ## Stage-to-Agent Mapping
 
@@ -14,11 +14,11 @@ Agents are grouped by stage. Each profile assigns a model to each stage:
 
 ## Profile Configuration
 
-Models are **user-configured**, not hardcoded. OpenCode supports multiple providers (Anthropic, OpenAI, local models, etc.), so available models vary per installation.
+Models are **user-configured**, not hardcoded. Copilot CLI supports multiple providers (Anthropic, OpenAI, local models, etc.), so available models vary per installation.
 
 On first run, `/gsd-settings` runs the **Preset Setup Wizard**:
 
-1. Queries `opencode models` to discover available models
+1. Queries `# Available models: opus, sonnet, haiku` to discover available models
 2. Prompts user to select models for each profile/stage combination
 3. Saves to `.planning/config.json`
 
@@ -71,7 +71,7 @@ Orchestrators resolve model before spawning:
 5. Pass model parameter to Task call
 ```
 
-Agent-to-model mappings are written to `opencode.json` by `/gsd-set-profile` and `/gsd-settings`.
+Agent-to-model mappings are written to `copilot-gsd.json` by `/gsd-set-profile` and `/gsd-settings`.
 
 ## Switching Profiles
 

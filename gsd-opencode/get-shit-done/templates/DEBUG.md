@@ -67,8 +67,8 @@ files_changed: []
 
 **Current Focus:**
 - OVERWRITE entirely on each update
-- Always reflects what OpenCode is doing RIGHT NOW
-- If OpenCode reads this after /new, it knows exactly where to resume
+- Always reflects what Copilot CLI is doing RIGHT NOW
+- If Copilot CLI reads this after /new, it knows exactly where to resume
 - Fields: hypothesis, test, expecting, next_action
 
 **Symptoms:**
@@ -135,7 +135,7 @@ files_changed: []
 
 <resume_behavior>
 
-When OpenCode reads this file after /new:
+When Copilot CLI reads this file after /new:
 
 1. Parse frontmatter → know status
 2. read Current Focus → know exactly what was happening
@@ -143,7 +143,7 @@ When OpenCode reads this file after /new:
 4. read Evidence → know what's been learned
 5. Continue from next_action
 
-The file IS the debugging brain. OpenCode should be able to resume perfectly from any interruption point.
+The file IS the debugging brain. Copilot CLI should be able to resume perfectly from any interruption point.
 
 </resume_behavior>
 
