@@ -9,6 +9,8 @@
 You MUST follow the questioning workflow below BEFORE creating ANY files or writing ANY code.
 The user's description after "gsd new-project" is just initial context — NOT permission to build.
 
+**Use `ask_user` tool for all user choices** — present selectable options (up/down + Enter) instead of asking users to type responses.
+
 ---
 
 ## Commands
@@ -33,8 +35,7 @@ When triggered, execute these phases IN ORDER:
 
 ### PHASE 1: QUESTIONING
 
-**Display this banner, then immediately ask questions:**
-
+Display:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  GSD ► QUESTIONING
@@ -43,23 +44,30 @@ When triggered, execute these phases IN ORDER:
 
 **🛑 DO NOT CREATE FILES. DO NOT WRITE CODE.**
 
-Ask:
-> "Before I start building, I need to understand:
-> 1. **Who is this for?** (yourself, friends, public?)
-> 2. **What features matter most?**
-> 3. **Any tech requirements?** (vanilla JS, specific framework?)
-> 4. **What's v1 scope vs later?**
-> 5. **What should I NOT include?**"
+**Use ask_user to gather context with selectable options:**
 
-**Wait for user to answer → then AUTOMATICALLY continue to Phase 2.**
+1. Ask about **audience**:
+   - Options: "Just me", "Friends/team", "Public users"
+
+2. Ask about **tech stack**:
+   - Options: "Vanilla JS (no framework)", "React", "Vue", "Whatever you recommend"
+
+3. Ask about **scope**:
+   - Options: "Minimal MVP", "Full featured v1", "Quick prototype"
+
+4. Ask any **clarifying questions** as free text if needed.
+
+**After answers → AUTOMATICALLY continue to Phase 2.**
 
 ---
 
 ### PHASE 2: RESEARCH (quick check)
 
-Ask: "Want me to quickly research best practices for [domain]? (yes/no)"
+**Use ask_user with options:**
+- Question: "Research best practices for [domain] first?"
+- Options: "Yes, research first", "No, skip to requirements"
 
-- If yes: Do quick research, share key findings
+- If yes: Do quick web search, share key findings
 - If no: Skip
 
 **After research (or skip) → AUTOMATICALLY continue to Phase 3.**
@@ -85,10 +93,12 @@ Present requirements based on what user said:
 - [what they said to exclude]
 ```
 
-Ask: "Does this look right? (yes / changes needed)"
+**Use ask_user with options:**
+- Question: "Does this look right?"
+- Options: "Yes, continue", "No, make changes"
 
 **If yes → AUTOMATICALLY continue to Phase 4.**
-**If changes → make changes, then continue to Phase 4.**
+**If changes → ask what to change, then continue to Phase 4.**
 
 ---
 
@@ -111,7 +121,9 @@ Requirements: REQ-001, REQ-002
 - [deliverable]
 ```
 
-Ask: "Does this structure work? (yes / changes needed)"
+**Use ask_user with options:**
+- Question: "Does this roadmap work?"
+- Options: "Yes, create files", "No, adjust phases"
 
 **If yes → AUTOMATICALLY continue to Phase 5.**
 
@@ -136,61 +148,129 @@ Display:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Files created in .planning/
-
-Next: Say "gsd plan-phase 1" to start planning.
 ```
 
-**NOW stop and wait for next command.**
+**Use ask_user with options:**
+- Question: "Project initialized. What next?"
+- Options: "Start planning phase 1", "I'll do it later"
+
+If "Start planning phase 1" → run gsd plan-phase 1 workflow.
+If "later" → stop and wait.
 
 ---
 
 ## gsd plan-phase N
 
 1. Read `.planning/ROADMAP.md` for phase N details
-2. Use `/plan` to create implementation plan:
-   ```
-   /plan Implement [phase name]: [deliverables]
-   ```
+2. Use `/plan` to create implementation plan
 3. Save plan to `.planning/phases/0N-name/0N-01-PLAN.md`
-4. Update STATE.md: Status = 🟡 Planned, Next = `gsd execute-phase N`
+4. Update STATE.md: Status = 🟡 Planned
+
+**Display the plan with checkboxes:**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► PHASE N PLAN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Tasks
+- [ ] Task 1: [description]
+- [ ] Task 2: [description]
+- [ ] Task 3: [description]
+```
+
+**Use ask_user with options:**
+- Question: "Phase N planned. Ready to execute?"
+- Options: "Yes, execute now", "No, I'll review first"
+
+If "execute now" → run gsd execute-phase N workflow.
 
 ---
 
 ## gsd execute-phase N
 
+**Display progress banner at start:**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► EXECUTING PHASE N
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
 1. Read plans in `.planning/phases/0N-*/`
-2. Execute each task, committing after each
+
+**Show task list with status as you work:**
+```
+## Progress
+- [x] Task 1: [description] ✓
+- [→] Task 2: [description] ← current
+- [ ] Task 3: [description]
+```
+
+2. For each task:
+   - **Show:** `[→] Working on: [task description]`
+   - Execute the task
+   - Commit changes
+   - **Show:** `[✓] Completed: [task description]`
+   - Update the progress display
+
 3. Update STATE.md after each task
 4. On completion: Mark phase COMPLETED in ROADMAP.md
+
+**Show completion:**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► PHASE N COMPLETE ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Completed Tasks
+- [x] Task 1 ✓
+- [x] Task 2 ✓
+- [x] Task 3 ✓
+```
+
+**Use ask_user with options:**
+- Question: "Phase N complete. What next?"
+- Options: "Verify the work", "Plan next phase", "I'm done for now"
 
 ---
 
 ## gsd verify-work N
 
-1. Use `/review` to check implementation:
-   ```
-   /review Phase N vs .planning/phases/0N-*
-   ```
+1. Use `/review` to check implementation
 2. Verify: All tasks done, code works, tests pass
 3. Update STATE.md: Status = 🟢 Verified or 🔴 Needs fixes
+
+**Use ask_user with options:**
+- Question: "Verification complete. Result?"
+- Options: "All good, continue", "Issues found, needs fixes"
 
 ---
 
 ## gsd progress
 
-Read STATE.md and display:
+Read STATE.md and ROADMAP.md, then display:
 ```
-═══════════════════════════════════════
-📊 GSD PROGRESS
-═══════════════════════════════════════
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► PROJECT PROGRESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Current Phase: [from STATE.md]
-Status: [status]
-Last Action: [action]
-Next Action: [next]
+## Phases
+- [x] Phase 1: Foundation ✓
+- [→] Phase 2: Core Features ← current
+- [ ] Phase 3: Polish
 
-═══════════════════════════════════════
+## Current Phase Tasks
+- [x] Task 2.1 ✓
+- [→] Task 2.2 ← in progress
+- [ ] Task 2.3
+
+Status: [from STATE.md]
+Next: [suggested action]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
+
+**Use ask_user with options:**
+- Question: "What would you like to do?"
+- Options: "Continue current phase", "See phase details", "Nothing for now"
 
 ---
 
