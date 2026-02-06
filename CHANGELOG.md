@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [gsd-copilot-cli v0.2.1] - 2025-01-24
+
+Critical fix: AGENTS.md rewritten as directives instead of documentation.
+
+### Fixed
+- **gsd new-project now enforces questioning workflow** — CLI was skipping questioning and building immediately
+- AGENTS.md completely rewritten with mandatory STOP gates
+- Added explicit "DO NOT WRITE ANY CODE" instruction at top
+- Added phase banners (GSD ► QUESTIONING, etc.)
+- Added user confirmation gates before proceeding to next phase
+- Added "ASK AT LEAST 3-5 QUESTIONS" explicit requirement
+
+### Changed
+- Instruction style changed from documentation ("here's how GSD works") to directives ("YOU MUST follow this workflow")
+- Reduced file size by removing verbose explanations
+- Clearer command structure
+
 ## [1.9.1] - 2026-01-23
 
 Standardized command naming conventions and improved documentation formatting across project files.

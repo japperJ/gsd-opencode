@@ -8,17 +8,29 @@ Based on [gsd-opencode](https://github.com/rokicool/gsd-opencode) by TÂCHES & r
 
 ---
 
-## What''s New in v0.2.0
+## What's New in v0.2.1
 
-GSD now **natively integrates** with Copilot CLI''s built-in features:
+**Critical fix:** `gsd new-project` now **enforces** the questioning workflow.
+
+Previously, Copilot CLI was skipping questions and building immediately. Now:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► QUESTIONING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+What do you want to build? Tell me more about it.
+```
+
+The workflow asks **3-5 questions minimum** before creating any files.
+
+### v0.2.0 Features (still available)
 
 | GSD Command | Uses Native | What Happens |
 |-------------|-------------|--------------|
 | `gsd plan-phase 1` | `/plan` | Structured planning with checkboxes |
 | `gsd verify-work 1` | `/review` | Code review with GSD criteria |
 | `gsd delegate-task` | `/delegate` | Async work via coding agent |
-
-This means better results with less context overhead.
 
 ---
 
