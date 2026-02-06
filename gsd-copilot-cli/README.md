@@ -8,18 +8,20 @@
 
 ## Installation
 
-> **Note:** Package not yet published to npm. Clone the repo first, then run from your project:
+> **Note:** Package not yet published to npm. Clone the repo first, then run from your project directory:
 
 ```bash
-node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js
+# Replace with the actual path where you cloned Copilot-cli-GSD
+node <path-to-clone>/gsd-copilot-cli/bin/install.js
 ```
 
 Choose your installation mode:
 1. **Minimal** (recommended) — `AGENTS.md` only
-2. **Full** — `AGENTS.md` + path-specific instructions + hooks ⚠️
-3. **Legacy** — `copilot-instructions.md` (v0.1 style)
+2. **Pro** — `AGENTS.md` + path-specific instruction files (no hooks)
+3. **Full** — `AGENTS.md` + instructions + hooks (experimental)
+4. **Legacy** — `copilot-instructions.md` (v0.1 style)
 
-> ⚠️ **Note:** Full install uses newer Copilot CLI features (path-specific instructions, hooks) that may behave inconsistently. Start with Minimal unless you want to experiment.
+> **Note:** Pro and Full installs use newer Copilot CLI features (path-specific instructions, hooks) that may behave inconsistently. Start with Minimal unless you want the extra features.
 
 ---
 
@@ -27,7 +29,7 @@ Choose your installation mode:
 
 ```bash
 # Install (from your project directory)
-node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --minimal
+node <path-to-clone>/gsd-copilot-cli/bin/install.js --minimal
 
 # Start Copilot CLI
 copilot
@@ -44,7 +46,7 @@ copilot
 
 ## Native CLI Integration
 
-GSD v0.2 leverages Copilot CLI''s built-in features:
+GSD v0.3 leverages Copilot CLI's built-in features:
 
 | GSD Command | Uses Native | Benefit |
 |-------------|-------------|---------|
@@ -60,8 +62,11 @@ GSD v0.2 leverages Copilot CLI''s built-in features:
 |-------------|--------------|
 | `gsd new-project` | Questioning → research → requirements → roadmap |
 | `gsd plan-phase 1` | Create structured plan using `/plan` |
-| `gsd execute-phase 1` | Execute tasks with atomic commits |
-| `gsd verify-work 1` | Verify using `/review` |
+| `gsd execute-phase 1` | Execute tasks with atomic commits + auto-test |
+| `gsd verify-work 1` | 3-level verification + `/review` |
+| `gsd constitution` | Set project principles and standards |
+| `gsd debug [issue]` | Scientific debugging with persistent state |
+| `gsd pause` / `resume` | Save/restore work state |
 | `gsd progress` | Show current status |
 | `gsd delegate-task` | Offload to `/delegate` |
 | `gsd quick [task]` | Small ad-hoc task |
@@ -76,12 +81,26 @@ GSD v0.2 leverages Copilot CLI''s built-in features:
 AGENTS.md                              # Primary GSD instructions
 ```
 
+**Pro install:**
+```
+AGENTS.md
+.github/
+└── instructions/
+    ├── gsd-planning.instructions.md       # Planning workflow
+    ├── gsd-verification.instructions.md   # 3-level verification
+    ├── gsd-execution.instructions.md      # Deviation rules + auto-test
+    └── gsd-debugging.instructions.md      # Scientific debugging
+```
+
 **Full install:**
 ```
 AGENTS.md
 .github/
 ├── instructions/
-│   └── gsd-planning.instructions.md   # Path-specific for .planning/**
+│   ├── gsd-planning.instructions.md
+│   ├── gsd-verification.instructions.md
+│   ├── gsd-execution.instructions.md
+│   └── gsd-debugging.instructions.md
 └── hooks/
     └── gsd-hooks.json                 # Workflow automation
 ```
@@ -91,11 +110,12 @@ AGENTS.md
 ## CLI Options
 
 ```bash
-node /path/to/gsd-copilot-cli/bin/install.js --help
+node <path-to-clone>/gsd-copilot-cli/bin/install.js --help
 
 Options:
   -m, --minimal  Install AGENTS.md only (recommended)
-  -f, --full     Install all files (AGENTS.md + .github/)
+  -p, --pro      Install AGENTS.md + instruction files
+  -f, --full     Install all files (AGENTS.md + .github/ + hooks)
   --legacy       Install copilot-instructions.md (v0.1)
   -y, --yes      Skip confirmation
   -h, --help     Show help
@@ -126,6 +146,7 @@ your-project/
     ├── PROJECT.md         # Vision
     ├── REQUIREMENTS.md    # REQ-XXX scoped
     ├── ROADMAP.md         # Phases
+    ├── CONSTITUTION.md    # Project principles (optional)
     ├── STATE.md           # Current state
     └── phases/
         └── 01-foundation/

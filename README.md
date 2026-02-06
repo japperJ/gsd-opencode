@@ -38,8 +38,8 @@ git clone https://github.com/rokicool/Copilot-cli-GSD.git
 # Go to your project directory
 cd your-project
 
-# Install GSD (minimal = AGENTS.md only)
-node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --minimal
+# Install GSD (replace <path-to-clone> with actual clone location)
+node <path-to-clone>/gsd-copilot-cli/bin/install.js --minimal
 
 # Start Copilot CLI
 copilot
@@ -194,19 +194,19 @@ git clone https://github.com/rokicool/Copilot-cli-GSD.git
 # Then from your project directory:
 
 # Interactive (prompts for choice)
-node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js
+node <path-to-clone>/gsd-copilot-cli/bin/install.js
 
 # Minimal — AGENTS.md only (recommended)
-node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --minimal
+node <path-to-clone>/gsd-copilot-cli/bin/install.js --minimal
 
 # Pro — AGENTS.md + advanced instruction files (verification, execution, debugging)
-node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --pro
+node <path-to-clone>/gsd-copilot-cli/bin/install.js --pro
 
 # Full — Pro + hooks (experimental)
-node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --full
+node <path-to-clone>/gsd-copilot-cli/bin/install.js --full
 
 # Legacy — copilot-instructions.md (v0.1 compatibility)
-node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --legacy
+node <path-to-clone>/gsd-copilot-cli/bin/install.js --legacy
 ```
 
 **Future:** Once published to npm, you'll be able to use `npx gsd-copilot-cli`.
