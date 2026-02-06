@@ -2,29 +2,32 @@
 
 **Spec-driven development with native Copilot CLI integration**
 
-[![npm version](https://img.shields.io/npm/v/gsd-copilot-cli?style=for-the-badge)](https://www.npmjs.com/package/gsd-copilot-cli)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 
 ---
 
 ## Installation
 
+> **Note:** Package not yet published to npm. Clone the repo first, then run from your project:
+
 ```bash
-npx gsd-copilot-cli
+node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js
 ```
 
 Choose your installation mode:
 1. **Minimal** (recommended) — `AGENTS.md` only
-2. **Full** — `AGENTS.md` + path-specific instructions + hooks
+2. **Full** — `AGENTS.md` + path-specific instructions + hooks ⚠️
 3. **Legacy** — `copilot-instructions.md` (v0.1 style)
+
+> ⚠️ **Note:** Full install uses newer Copilot CLI features (path-specific instructions, hooks) that may behave inconsistently. Start with Minimal unless you want to experiment.
 
 ---
 
 ## Quick Start
 
 ```bash
-# Install
-npx gsd-copilot-cli --minimal
+# Install (from your project directory)
+node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --minimal
 
 # Start Copilot CLI
 copilot
@@ -86,7 +89,7 @@ AGENTS.md
 ## CLI Options
 
 ```bash
-npx gsd-copilot-cli --help
+node /path/to/gsd-copilot-cli/bin/install.js --help
 
 Options:
   -m, --minimal  Install AGENTS.md only (recommended)

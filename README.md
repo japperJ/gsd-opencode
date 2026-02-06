@@ -8,23 +8,27 @@ Based on [gsd-opencode](https://github.com/rokicool/gsd-opencode) by TÂCHES & r
 
 ---
 
-## What's New in v0.2.1
+## What's New in v0.2.2
 
-**Critical fix:** `gsd new-project` now **enforces** the questioning workflow.
+**Interactive selections & visual progress tracking**
 
-Previously, Copilot CLI was skipping questions and building immediately. Now:
+- **Selectable options** — Use arrow keys (↑↓) + Enter instead of typing responses
+- **Visual workplan** — See tasks with checkboxes as they complete:
+  ```
+  - [x] Task 1 ✓
+  - [→] Task 2 ← current  
+  - [ ] Task 3
+  ```
+- **Auto-continue** — Phases flow automatically after each response
+- **Better completion flow** — After verify, choose "Plan next phase" / "See progress" / "Done"
 
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► QUESTIONING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+### v0.2.1 Features
 
-What do you want to build? Tell me more about it.
-```
+- Questioning workflow enforced with STOP gates
+- Phase banners (GSD ► QUESTIONING, etc.)
+- 3-5 questions minimum before creating files
 
-The workflow asks **3-5 questions minimum** before creating any files.
-
-### v0.2.0 Features (still available)
+### v0.2.0 Features
 
 | GSD Command | Uses Native | What Happens |
 |-------------|-------------|--------------|
@@ -178,19 +182,28 @@ your-project/
 
 ## Installation Options
 
+> **Note:** Package not yet published to npm. Use the local install method below.
+
 ```bash
+# First, clone the repo (if you haven't)
+git clone https://github.com/rokicool/Copilot-cli-GSD.git
+
+# Then from your project directory:
+
 # Interactive (prompts for choice)
-npx gsd-copilot-cli
+node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js
 
 # Minimal — AGENTS.md only (recommended)
-npx gsd-copilot-cli --minimal
+node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --minimal
 
-# Full — AGENTS.md + .github/ instructions + hooks
-npx gsd-copilot-cli --full
+# Full — AGENTS.md + .github/ instructions + hooks (experimental)
+node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --full
 
 # Legacy — copilot-instructions.md (v0.1 compatibility)
-npx gsd-copilot-cli --legacy
+node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --legacy
 ```
+
+**Future:** Once published to npm, you'll be able to use `npx gsd-copilot-cli`.
 
 ### What Each Option Creates
 
@@ -199,7 +212,7 @@ npx gsd-copilot-cli --legacy
 └── AGENTS.md
 ```
 
-**Full:**
+**Full:** ⚠️ *Experimental — uses newer CLI features that may behave inconsistently*
 ```
 ├── AGENTS.md
 └── .github/

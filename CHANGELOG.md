@@ -5,7 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [gsd-copilot-cli v0.2.1] - 2025-01-24
+## [gsd-copilot-cli v0.2.2] - 2026-02-06
+
+Interactive selections and visual progress tracking.
+
+### Added
+- **Selectable options** — Use `ask_user` tool with arrow keys (↑↓) + Enter instead of typing responses
+- **Visual workplan display** — Tasks shown with checkboxes that update during execution:
+  ```
+  - [x] Task 1 ✓
+  - [→] Task 2 ← current
+  - [ ] Task 3
+  ```
+- **Auto-continue between phases** — Workflow flows automatically after each user response
+- **Better completion flow** — After verify, choose "Plan next phase" / "See progress" / "Done"
+- **Progress command improvements** — Shows both phases and current task progress
+
+### Changed
+- All user prompts now use `ask_user` with selectable options
+- Removed ambiguous "wait for confirmation" language
+- Added explicit "→ AUTOMATICALLY continue to Phase N" instructions
+
+## [gsd-copilot-cli v0.2.1] - 2026-02-06
 
 Critical fix: AGENTS.md rewritten as directives instead of documentation.
 
