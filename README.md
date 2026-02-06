@@ -37,13 +37,14 @@ The workflow asks **3-5 questions minimum** before creating any files.
 ## Quick Start
 
 ```bash
-# Install in your project directory
-npx gsd-copilot-cli
+# Clone the repo
+git clone https://github.com/rokicool/Copilot-cli-GSD.git
 
-# Choose installation mode:
-# 1. Minimal (recommended) — AGENTS.md only
-# 2. Full — AGENTS.md + path-specific instructions + hooks
-# 3. Legacy — copilot-instructions.md (v0.1 style)
+# Go to your project directory
+cd your-project
+
+# Install GSD (minimal = AGENTS.md only)
+node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --minimal
 
 # Start Copilot CLI
 copilot
@@ -53,6 +54,8 @@ copilot
 > gsd plan-phase 1
 > gsd execute-phase 1
 ```
+
+**Future:** Once published to npm, you'll be able to run `npx gsd-copilot-cli`.
 
 ---
 
