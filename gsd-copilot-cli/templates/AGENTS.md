@@ -11,11 +11,13 @@ The user's description after "gsd new-project" is just initial context — NOT p
 
 **Use `ask_user` tool for all user choices** — present selectable options (up/down + Enter) instead of asking users to type responses.
 
-**ALWAYS show content before asking for confirmation** — if asking "Does this look right?", you MUST display what "this" is in your message FIRST.
+**🚨 CRITICAL: Copilot CLI hides text output when ask_user is called.**
+The ONLY text users see is the question parameter of ask_user.
+If you need users to approve something (requirements, roadmap, plan), you MUST include that content IN the question text itself.
 
-**🚨 NEVER pause between phases to announce what you're about to do.**
+**NEVER pause between phases to announce what you're about to do.**
 - WRONG: "Next, I'll define the requirements and confirm with you." (then stopping)
-- RIGHT: Just display the requirements and call ask_user immediately.
+- RIGHT: Just call ask_user with the requirements embedded in the question.
 
 ---
 
@@ -96,29 +98,23 @@ Display:
 
 ### PHASE 3: REQUIREMENTS
 
-**🚨 This phase happens IMMEDIATELY after Phase 2 — in the SAME message.**
+**🚨 This phase happens IMMEDIATELY after Phase 2.**
 
-Display this banner AND the full requirements list in your message:
+Build the requirements list based on user answers.
+
+**🚨 CRITICAL: Include requirements IN the ask_user question text itself.**
+
+The CLI hides text output when ask_user is called. The ONLY text users see is the question parameter.
+
+**Call ask_user with the requirements EMBEDDED in the question:**
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► DEFINING REQUIREMENTS  
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-## V1 Requirements
-- REQ-001: [specific requirement from their answers]
-- REQ-002: [specific requirement]
-- REQ-003: [specific requirement]
-
-## Out of Scope
-- [item 1]
-- [item 2]
+ask_user(
+  question: "━━━ GSD ► REQUIREMENTS ━━━\n\nV1 Requirements:\n- REQ-001: [requirement]\n- REQ-002: [requirement]\n- REQ-003: [requirement]\n\nOut of Scope:\n- [item]\n\nDoes this look right?",
+  options: ["Yes, continue", "No, make changes"]
+)
 ```
 
-**All requirements MUST be visible in your message BEFORE calling ask_user.**
-
-**THEN call ask_user:**
-- Question: "Does this requirements list look right?"
-- Options: "Yes, continue", "No, make changes"
+**The question text MUST contain the full requirements list so users can see what they're approving.**
 
 **When user answers → continue to Phase 4 IN THE SAME RESPONSE.**
 
@@ -126,29 +122,21 @@ Display this banner AND the full requirements list in your message:
 
 ### PHASE 4: ROADMAP
 
-**🚨 This phase happens IMMEDIATELY after Phase 3 — in the SAME message.**
+**🚨 This phase happens IMMEDIATELY after Phase 3.**
 
-Display this banner AND the full roadmap in your message:
+Build the roadmap based on requirements.
+
+**🚨 CRITICAL: Include roadmap IN the ask_user question text itself.**
+
+**Call ask_user with the roadmap EMBEDDED in the question:**
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► CREATING ROADMAP
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-## Phase 1: [Name] — [Goal]
-- [deliverable 1]
-- [deliverable 2]
-Requirements: REQ-001, REQ-002
-
-## Phase 2: [Name] — [Goal]
-- [deliverable 1]
-Requirements: REQ-003
+ask_user(
+  question: "━━━ GSD ► ROADMAP ━━━\n\nPhase 1: [Name]\n- [deliverable 1]\n- [deliverable 2]\nReqs: REQ-001, REQ-002\n\nPhase 2: [Name]\n- [deliverable 1]\nReqs: REQ-003\n\nDoes this roadmap work?",
+  options: ["Yes, create files", "No, adjust phases"]
+)
 ```
 
-**All roadmap content MUST be visible BEFORE calling ask_user.**
-
-**THEN call ask_user:**
-- Question: "Does this roadmap work?"
-- Options: "Yes, create files", "No, adjust phases"
+**The question text MUST contain the full roadmap so users can see what they're approving.**
 
 **When user answers Yes → continue to Phase 5 IN THE SAME RESPONSE.**
 
@@ -191,23 +179,15 @@ If "later" → stop and wait.
 3. Save plan to `.planning/phases/0N-name/0N-01-PLAN.md`
 4. Update STATE.md: Status = 🟡 Planned
 
-**Display the full plan with checkboxes in your message:**
+**🚨 CRITICAL: Include the plan IN the ask_user question text.**
+
+**Call ask_user with the plan EMBEDDED in the question:**
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- GSD ► PHASE N PLAN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-## Tasks
-- [ ] Task 1: [specific description]
-- [ ] Task 2: [specific description]
-- [ ] Task 3: [specific description]
+ask_user(
+  question: "━━━ GSD ► PHASE N PLAN ━━━\n\nTasks:\n- [ ] Task 1: [description]\n- [ ] Task 2: [description]\n- [ ] Task 3: [description]\n\nReady to execute?",
+  options: ["Yes, execute now", "No, I'll review first"]
+)
 ```
-
-**IMPORTANT: Show ALL tasks in your message BEFORE asking for confirmation.**
-
-**THEN use ask_user with options:**
-- Question: "Phase N planned. Ready to execute?"
-- Options: "Yes, execute now", "No, I'll review first"
 
 If "execute now" → run gsd execute-phase N workflow.
 
