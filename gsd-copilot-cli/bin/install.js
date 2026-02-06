@@ -2,7 +2,6 @@
 
 const fs = require("fs");
 const path = require("path");
-const os = require("os");
 const readline = require("readline");
 
 // Colors
@@ -10,7 +9,6 @@ const cyan = "\x1b[36m";
 const green = "\x1b[32m";
 const yellow = "\x1b[33m";
 const dim = "\x1b[2m";
-const gray = "\x1b[90m";
 const white = "\x1b[37m";
 const reset = "\x1b[0m";
 
@@ -28,16 +26,18 @@ ${cyan}   ██████╗ ███████╗██████╗
   ${white}for GitHub Copilot CLI${reset}
 
   Get Shit Done ${dim}v${pkg.version}${reset}
-  A meta-prompting system for spec-driven development
-  (conversational commands - no slash commands needed)
+  Native integration with Copilot CLI features
+  (/plan, /review, /delegate + GSD workflow)
 
 `;
 
 // Parse args
 const args = process.argv.slice(2);
-const hasGlobal = args.includes("--global") || args.includes("-g");
-const hasLocal = args.includes("--local") || args.includes("-l");
+const hasMinimal = args.includes("--minimal") || args.includes("-m");
+const hasFull = args.includes("--full") || args.includes("-f");
+const hasLegacy = args.includes("--legacy");
 const hasHelp = args.includes("--help") || args.includes("-h");
+const hasYes = args.includes("-y") || args.includes("--yes");
 
 console.log(banner);
 
@@ -46,107 +46,223 @@ if (hasHelp) {
   console.log(`  ${yellow}Usage:${reset} npx gsd-copilot-cli [options]
 
   ${yellow}Options:${reset}
-    ${cyan}-g, --global${reset}   Install to current directory (copilot-instructions.md)
-    ${cyan}-l, --local${reset}    Same as --global (for compatibility)
+    ${cyan}-m, --minimal${reset}  Install only AGENTS.md (recommended)
+    ${cyan}-f, --full${reset}     Install all files (AGENTS.md + .github/ instructions + hooks)
+    ${cyan}--legacy${reset}       Install old copilot-instructions.md (for older CLI versions)
+    ${cyan}-y, --yes${reset}      Skip confirmation prompt
     ${cyan}-h, --help${reset}     Show this help message
 
-  ${yellow}What this does:${reset}
-    Creates/updates copilot-instructions.md in the current directory
-    with the GSD meta-prompting system.
+  ${yellow}Files created:${reset}
+
+    ${cyan}Minimal (default):${reset}
+    └── AGENTS.md                              Primary GSD instructions
+
+    ${cyan}Full:${reset}
+    ├── AGENTS.md                              Primary GSD instructions
+    └── .github/
+        ├── instructions/
+        │   └── gsd-planning.instructions.md   Path-specific for .planning/**
+        └── hooks/
+            └── gsd-hooks.json                 Workflow automation hooks
+
+  ${yellow}Native CLI integration:${reset}
+    GSD now leverages Copilot CLI's built-in features:
+    - ${cyan}/plan${reset}      Used by 'gsd plan-phase' for structured planning
+    - ${cyan}/review${reset}    Used by 'gsd verify-work' for verification
+    - ${cyan}/delegate${reset}  Used by 'gsd delegate-task' for async work
 
   ${yellow}How to use after install:${reset}
-    Run \`copilot\` to start GitHub Copilot CLI, then say:
-    - "gsd new-project" to initialize
-    - "gsd plan-phase 1" to plan
-    - "gsd execute-phase 1" to execute
-    - "gsd help" for all commands
-
-  ${yellow}Note:${reset}
-    Unlike Claude Code or OpenCode, GitHub Copilot CLI doesn't support
-    custom slash commands. GSD commands are invoked conversationally.
+    1. Start Copilot CLI: ${cyan}copilot${reset}
+    2. Say GSD commands conversationally:
+       - "gsd new-project" — Initialize project
+       - "gsd plan-phase 1" — Plan using native /plan
+       - "gsd execute-phase 1" — Execute with commits
+       - "gsd help" — Show all commands
   `);
   process.exit(0);
 }
 
 /**
- * Install copilot-instructions.md to the current directory
+ * Ensure directory exists
  */
-function install() {
+function ensureDir(dirPath) {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+}
+
+/**
+ * Copy file with existence check
+ */
+function copyFile(src, dest, description) {
+  const destExists = fs.existsSync(dest);
+  
+  if (destExists) {
+    const srcContent = fs.readFileSync(src, "utf8");
+    const destContent = fs.readFileSync(dest, "utf8");
+    
+    if (srcContent === destContent) {
+      console.log(`  ${dim}○${reset} ${description} (unchanged)`);
+      return false;
+    }
+    
+    // Check if it's a GSD file we can update
+    if (destContent.includes("GSD") || destContent.includes("Get Shit Done")) {
+      fs.writeFileSync(dest, srcContent);
+      console.log(`  ${green}✓${reset} Updated ${description}`);
+      return true;
+    } else {
+      // Append GSD to existing file
+      const combined = destContent + "\n\n---\n\n" + srcContent;
+      fs.writeFileSync(combined, dest);
+      console.log(`  ${green}✓${reset} Appended GSD to ${description}`);
+      return true;
+    }
+  } else {
+    ensureDir(path.dirname(dest));
+    fs.copyFileSync(src, dest);
+    console.log(`  ${green}✓${reset} Created ${description}`);
+    return true;
+  }
+}
+
+/**
+ * Install minimal (AGENTS.md only)
+ */
+function installMinimal() {
+  const templatesDir = path.join(__dirname, "..", "templates");
+  const destDir = process.cwd();
+  
+  console.log(`  ${yellow}Installing AGENTS.md...${reset}\n`);
+  
+  copyFile(
+    path.join(templatesDir, "AGENTS.md"),
+    path.join(destDir, "AGENTS.md"),
+    "AGENTS.md"
+  );
+  
+  return true;
+}
+
+/**
+ * Install full (all files)
+ */
+function installFull() {
+  const templatesDir = path.join(__dirname, "..", "templates");
+  const destDir = process.cwd();
+  
+  console.log(`  ${yellow}Installing GSD files...${reset}\n`);
+  
+  // AGENTS.md
+  copyFile(
+    path.join(templatesDir, "AGENTS.md"),
+    path.join(destDir, "AGENTS.md"),
+    "AGENTS.md"
+  );
+  
+  // .github/instructions/gsd-planning.instructions.md
+  copyFile(
+    path.join(templatesDir, ".github", "instructions", "gsd-planning.instructions.md"),
+    path.join(destDir, ".github", "instructions", "gsd-planning.instructions.md"),
+    ".github/instructions/gsd-planning.instructions.md"
+  );
+  
+  // .github/hooks/gsd-hooks.json
+  copyFile(
+    path.join(templatesDir, ".github", "hooks", "gsd-hooks.json"),
+    path.join(destDir, ".github", "hooks", "gsd-hooks.json"),
+    ".github/hooks/gsd-hooks.json"
+  );
+  
+  return true;
+}
+
+/**
+ * Install legacy (copilot-instructions.md)
+ */
+function installLegacy() {
   const srcDir = path.join(__dirname, "..");
   const srcFile = path.join(srcDir, "copilot-instructions.md");
   const destFile = path.join(process.cwd(), "copilot-instructions.md");
-
-  // Check if source file exists
+  
+  console.log(`  ${yellow}Installing legacy copilot-instructions.md...${reset}\n`);
+  
   if (!fs.existsSync(srcFile)) {
     console.error(`  ${yellow}Error: copilot-instructions.md not found in package${reset}`);
     process.exit(1);
   }
-
-  // Check if destination already exists
-  if (fs.existsSync(destFile)) {
-    console.log(`  ${yellow}copilot-instructions.md already exists.${reset}`);
-    
-    // Read both files to check if they're different
-    const srcContent = fs.readFileSync(srcFile, "utf8");
-    const destContent = fs.readFileSync(destFile, "utf8");
-    
-    if (srcContent === destContent) {
-      console.log(`  ${green}✓${reset} Already up to date (v${pkg.version})`);
-      showUsage();
-      return;
-    }
-    
-    // Files are different - check if dest has GSD header
-    if (destContent.includes("# GSD — Get Shit Done")) {
-      console.log(`  Updating to v${pkg.version}...`);
-      fs.writeFileSync(destFile, srcContent);
-      console.log(`  ${green}✓${reset} Updated copilot-instructions.md`);
-    } else {
-      // Destination has custom content - append GSD
-      console.log(`  Appending GSD to existing instructions...`);
-      const combined = destContent + "\n\n---\n\n" + srcContent;
-      fs.writeFileSync(destFile, combined);
-      console.log(`  ${green}✓${reset} Appended GSD to copilot-instructions.md`);
-    }
-  } else {
-    // Create new file
-    fs.copyFileSync(srcFile, destFile);
-    console.log(`  ${green}✓${reset} Created copilot-instructions.md`);
-  }
-
-  // Create VERSION file in .planning if it exists
-  const planningDir = path.join(process.cwd(), ".planning");
-  if (fs.existsSync(planningDir)) {
-    fs.writeFileSync(path.join(planningDir, "gsd-version.txt"), `v${pkg.version}`);
-    console.log(`  ${green}✓${reset} Updated GSD version in .planning/`);
-  }
-
-  showUsage();
+  
+  copyFile(srcFile, destFile, "copilot-instructions.md");
+  return true;
 }
 
-function showUsage() {
+/**
+ * Show usage instructions
+ */
+function showUsage(mode) {
+  const files = mode === "full" 
+    ? "AGENTS.md + .github/ files"
+    : mode === "legacy"
+    ? "copilot-instructions.md"
+    : "AGENTS.md";
+    
   console.log(`
   ${green}Done!${reset} GSD is now available in this project.
+
+  ${yellow}Files installed:${reset} ${files}
 
   ${yellow}How to use:${reset}
 
   1. Start Copilot CLI:
      ${cyan}copilot${reset}
 
-  2. Say any GSD command conversationally:
+  2. Say GSD commands conversationally:
      ${dim}"gsd new-project"${reset}      Initialize a new project
-     ${dim}"gsd plan-phase 1"${reset}     Plan phase 1
+     ${dim}"gsd plan-phase 1"${reset}     Plan using native /plan
      ${dim}"gsd execute-phase 1"${reset}  Execute phase 1
+     ${dim}"gsd verify-work 1"${reset}    Verify using native /review
      ${dim}"gsd progress"${reset}         Check current status
      ${dim}"gsd help"${reset}             Show all commands
 
-  ${yellow}Note:${reset} These are conversational commands, not slash commands.
-  Copilot CLI will read copilot-instructions.md and understand the GSD workflow.
+  ${yellow}Native integration:${reset}
+  GSD leverages Copilot CLI's built-in features:
+  - /plan, /review, /delegate work with GSD
+  - Shift+Tab toggles plan mode
+  - /context shows token usage
+
+  ${yellow}Learn more:${reset}
+  https://docs.github.com/en/copilot/how-tos/copilot-cli/cli-best-practices
   `);
 }
 
 /**
- * Prompt for confirmation
+ * Main install function
+ */
+function install() {
+  let mode = "minimal";
+  
+  if (hasFull) {
+    mode = "full";
+    installFull();
+  } else if (hasLegacy) {
+    mode = "legacy";
+    installLegacy();
+  } else {
+    installMinimal();
+  }
+  
+  // Update version in .planning if it exists
+  const planningDir = path.join(process.cwd(), ".planning");
+  if (fs.existsSync(planningDir)) {
+    fs.writeFileSync(path.join(planningDir, "gsd-version.txt"), `v${pkg.version}`);
+    console.log(`  ${green}✓${reset} Updated GSD version in .planning/`);
+  }
+  
+  showUsage(mode);
+}
+
+/**
+ * Prompt for install mode
  */
 function promptInstall() {
   const rl = readline.createInterface({
@@ -154,25 +270,36 @@ function promptInstall() {
     output: process.stdout,
   });
 
-  const destPath = path.join(process.cwd(), "copilot-instructions.md");
-  const exists = fs.existsSync(destPath);
+  const agentsExists = fs.existsSync(path.join(process.cwd(), "AGENTS.md"));
+  
+  console.log(`  ${yellow}GSD Installation Options:${reset}
+  
+  ${cyan}1.${reset} Minimal (recommended) — AGENTS.md only
+  ${cyan}2.${reset} Full — AGENTS.md + path-specific instructions + hooks
+  ${cyan}3.${reset} Legacy — copilot-instructions.md (for older CLI versions)
+  `);
 
-  console.log(`  ${yellow}This will ${exists ? "update" : "create"} copilot-instructions.md${reset}`);
-  console.log(`  ${dim}Location: ${destPath}${reset}\n`);
-
-  rl.question(`  Proceed? ${dim}[Y/n]${reset}: `, (answer) => {
+  rl.question(`  Choice ${dim}[1/2/3]${reset}: `, (answer) => {
     rl.close();
-    const choice = answer.trim().toLowerCase() || "y";
-    if (choice === "y" || choice === "yes") {
-      install();
+    const choice = answer.trim() || "1";
+    
+    if (choice === "1") {
+      installMinimal();
+      showUsage("minimal");
+    } else if (choice === "2") {
+      installFull();
+      showUsage("full");
+    } else if (choice === "3") {
+      installLegacy();
+      showUsage("legacy");
     } else {
-      console.log(`  ${dim}Cancelled.${reset}`);
+      console.log(`  ${dim}Invalid choice. Cancelled.${reset}`);
     }
   });
 }
 
 // Main
-if (hasGlobal || hasLocal) {
+if (hasMinimal || hasFull || hasLegacy || hasYes) {
   install();
 } else {
   promptInstall();

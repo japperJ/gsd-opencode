@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "if [ -f .planning/STATE.md ]; then echo '📋 GSD Project detected. Current state:'; head -20 .planning/STATE.md; fi",
+        "powershell": "if (Test-Path .planning/STATE.md) { Write-Host '📋 GSD Project detected. Current state:'; Get-Content .planning/STATE.md -Head 20 }",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": "if [ -f .planning/STATE.md ] && [ \"$COPILOT_TOOL_NAME\" = \"write\" ]; then echo '💡 Reminder: Update .planning/STATE.md if this affects project state'; fi",
+        "powershell": "if ((Test-Path .planning/STATE.md) -and ($env:COPILOT_TOOL_NAME -eq 'write')) { Write-Host '💡 Reminder: Update .planning/STATE.md if this affects project state' }",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ]
+  }
+}

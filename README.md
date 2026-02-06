@@ -1,8 +1,6 @@
-<div align="left">
-
 # GSD — Get Shit Done for GitHub Copilot CLI
 
-**A meta-prompting, context engineering and spec-driven development system adapted for GitHub Copilot CLI**
+**A spec-driven development workflow with native Copilot CLI integration**
 
 Based on [gsd-opencode](https://github.com/rokicool/gsd-opencode) by TÂCHES & rokicool.
 
@@ -10,11 +8,17 @@ Based on [gsd-opencode](https://github.com/rokicool/gsd-opencode) by TÂCHES & r
 
 ---
 
-## ⚠️ Important: No Slash Commands
+## What''s New in v0.2.0
 
-**GitHub Copilot CLI does NOT support custom slash commands** (unlike Claude Code or OpenCode).
+GSD now **natively integrates** with Copilot CLI''s built-in features:
 
-This adaptation uses **conversational commands** instead. You say "gsd new-project" rather than typing "/gsd-new-project".
+| GSD Command | Uses Native | What Happens |
+|-------------|-------------|--------------|
+| `gsd plan-phase 1` | `/plan` | Structured planning with checkboxes |
+| `gsd verify-work 1` | `/review` | Code review with GSD criteria |
+| `gsd delegate-task` | `/delegate` | Async work via coding agent |
+
+This means better results with less context overhead.
 
 ---
 
@@ -23,6 +27,11 @@ This adaptation uses **conversational commands** instead. You say "gsd new-proje
 ```bash
 # Install in your project directory
 npx gsd-copilot-cli
+
+# Choose installation mode:
+# 1. Minimal (recommended) — AGENTS.md only
+# 2. Full — AGENTS.md + path-specific instructions + hooks
+# 3. Legacy — copilot-instructions.md (v0.1 style)
 
 # Start Copilot CLI
 copilot
@@ -33,42 +42,58 @@ copilot
 > gsd execute-phase 1
 ```
 
-That's it. Copilot CLI will read `copilot-instructions.md` and execute the GSD workflow.
-
 ---
 
 ## How It Works
 
-The installer creates a `copilot-instructions.md` file in your project root. This file contains the full GSD methodology. When you say "gsd new-project", Copilot CLI reads these instructions and follows the workflow.
-
-### Core Workflow
+GSD uses the **AGENTS.md standard** — the cross-tool format recognized by Copilot CLI, Claude Code, and others.
 
 ```
-gsd new-project → gsd plan-phase 1 → gsd execute-phase 1 → repeat
+your-project/
+├── AGENTS.md                          # Primary GSD instructions
+└── .github/                           # (Full install only)
+    ├── instructions/
+    │   └── gsd-planning.instructions.md  # Path-specific for .planning/**
+    └── hooks/
+        └── gsd-hooks.json             # Workflow automation
 ```
 
-### Available Commands (Conversational)
+### Instruction Discovery Order
 
-Say these to Copilot CLI:
+Copilot CLI reads instructions in this order:
 
-| Say this... | What it does |
-|-------------|--------------|
-| `gsd new-project` | Initialize project (questioning → research → requirements → roadmap) |
-| `gsd plan-phase 1` | Create detailed plan for phase 1 |
-| `gsd execute-phase 1` | Execute all plans in phase 1 |
-| `gsd verify-work 1` | Verify completed work |
-| `gsd progress` | Show current status and next action |
-| `gsd quick` | Execute small ad-hoc task |
-| `gsd help` | Show all commands |
+1. `~/.copilot/copilot-instructions.md` — Global (all sessions)
+2. `.github/copilot-instructions.md` — Repository-wide
+3. `.github/instructions/**/*.instructions.md` — Path-specific
+4. `AGENTS.md` (Git root or cwd) — **← GSD uses this**
+5. `CLAUDE.md`, `GEMINI.md`, `CODEX.md` — Also supported
 
 ---
 
-## What GSD Does
+## Available Commands
+
+| Say this... | What happens | Native feature used |
+|-------------|--------------|---------------------|
+| `gsd new-project` | Questioning → research → requirements → roadmap | Custom workflow |
+| `gsd plan-phase 1` | Research phase, then create structured plan | `/plan` |
+| `gsd execute-phase 1` | Execute tasks with atomic commits | File editing |
+| `gsd verify-work 1` | Verify against plan criteria | `/review` |
+| `gsd delegate-task` | Offload work to async coding agent | `/delegate` |
+| `gsd progress` | Show current status and next action | File reading |
+| `gsd quick [task]` | Execute small ad-hoc task | Direct execution |
+| `gsd help` | Show all commands | - |
+
+---
+
+## Core Workflow
+
+```
+gsd new-project → gsd plan-phase 1 → gsd execute-phase 1 → verify → repeat
+```
 
 ### 1. Initialize Project (`gsd new-project`)
 
-The system will:
-1. **Question** you until it understands what you're building
+1. **Deep questioning** until the project is understood
 2. **Research** the domain (optional)
 3. **Extract** requirements (v1 vs v2 vs out of scope)
 4. **Create** roadmap with phases
@@ -77,40 +102,54 @@ The system will:
 
 ### 2. Plan Phase (`gsd plan-phase 1`)
 
-The system will:
-1. Research how to implement this phase
-2. Break it into atomic plans (2-3 tasks each)
-3. Add verification criteria
+Uses Copilot CLI''s native `/plan` command:
 
-**Creates:** `.planning/phases/01-xxx/01-01-PLAN.md`
+1. Reads phase requirements from `ROADMAP.md`
+2. Researches implementation approach
+3. Executes `/plan` to create structured plan with checkboxes
+4. Saves to `.planning/phases/01-name/01-01-PLAN.md`
 
 ### 3. Execute Phase (`gsd execute-phase 1`)
 
-The system will:
-1. Execute each task
-2. Commit atomically after each task
-3. Create summaries
-4. Update state
+1. Reads each plan file
+2. Executes tasks sequentially
+3. Commits atomically after each task
+4. Creates summary in `SUMMARY.md`
+5. Updates `STATE.md`
 
-**Creates:** `.planning/phases/01-xxx/01-01-SUMMARY.md`
+### 4. Verify Work (`gsd verify-work 1`)
 
-### 4. Repeat
+Uses Copilot CLI''s native `/review` command with GSD-specific criteria.
 
-Continue through all phases until milestone complete.
+---
+
+## Native CLI Features You Should Know
+
+| Feature | What it does | When to use |
+|---------|--------------|-------------|
+| `/plan` | Creates implementation plan with checkboxes | Complex features |
+| `/review` | Analyzes code changes | Before merging |
+| `/delegate` | Offloads to cloud coding agent | Async/parallel work |
+| `/context` | Shows token usage | Monitor context |
+| `/compact` | Summarizes conversation | Long sessions |
+| `/session plan` | View current plan | Check progress |
+| `Shift+Tab` | Toggle plan mode | Complex work |
+| `@filename` | Include file in context | Reference code |
 
 ---
 
 ## File Structure
 
+After `gsd new-project`:
+
 ```
 your-project/
-├── copilot-instructions.md   # GSD system (created by installer)
-└── .planning/                 # Created during gsd new-project
+├── AGENTS.md                  # GSD workflow instructions
+└── .planning/
     ├── PROJECT.md            # Project vision
-    ├── REQUIREMENTS.md       # Scoped requirements with REQ-IDs
-    ├── ROADMAP.md            # Phase breakdown
-    ├── STATE.md              # Project memory
-    ├── config.json           # Workflow settings
+    ├── REQUIREMENTS.md       # Scoped requirements (REQ-XXX)
+    ├── ROADMAP.md            # Phase breakdown with statuses
+    ├── STATE.md              # Project memory (update frequently!)
     └── phases/
         ├── 01-foundation/
         │   ├── 01-RESEARCH.md
@@ -122,27 +161,67 @@ your-project/
 
 ---
 
-## Comparison: Claude Code vs OpenCode vs Copilot CLI
+## Installation Options
+
+```bash
+# Interactive (prompts for choice)
+npx gsd-copilot-cli
+
+# Minimal — AGENTS.md only (recommended)
+npx gsd-copilot-cli --minimal
+
+# Full — AGENTS.md + .github/ instructions + hooks
+npx gsd-copilot-cli --full
+
+# Legacy — copilot-instructions.md (v0.1 compatibility)
+npx gsd-copilot-cli --legacy
+```
+
+### What Each Option Creates
+
+**Minimal (recommended):**
+```
+└── AGENTS.md
+```
+
+**Full:**
+```
+├── AGENTS.md
+└── .github/
+    ├── instructions/
+    │   └── gsd-planning.instructions.md   # Applies to .planning/**
+    └── hooks/
+        └── gsd-hooks.json                 # Session start/post-tool hooks
+```
+
+**Legacy:**
+```
+└── copilot-instructions.md
+```
+
+---
+
+## Comparison: GSD Implementations
 
 | Feature | Claude Code | OpenCode | Copilot CLI |
 |---------|-------------|----------|-------------|
 | Commands | `/gsd-*` slash | `/gsd-*` slash | Conversational |
 | Multi-agent | ✓ Task tool | ✓ Task tool | ✗ Single context |
-| Model profiles | ✓ | ✓ | ✗ Uses current model |
-| Custom agents | ✓ `.claude/agents/` | ✓ `.opencode/agents/` | ✗ Embedded in instructions |
-| Parallel execution | ✓ | ✓ | ✗ Sequential |
+| Native planning | ✗ | ✗ | ✓ `/plan` built-in |
+| Native review | ✗ | ✗ | ✓ `/review` built-in |
+| Delegation | ✗ | ✗ | ✓ `/delegate` built-in |
+| Path-specific | ✗ | ✗ | ✓ `.instructions.md` files |
+| Hooks | ✗ | ✗ | ✓ `.github/hooks/` |
 
 ### When to Use Which
 
 | Use Case | Recommended |
 |----------|-------------|
-| Complex multi-phase projects | Claude Code or OpenCode |
-| Large codebases | Claude Code or OpenCode |
-| Quick projects / prototypes | Copilot CLI |
-| Learning GSD methodology | Copilot CLI |
-| Already using Copilot CLI | Copilot CLI |
-
-**Key limitation:** Copilot CLI runs in a single context without multi-agent orchestration. Best for smaller projects or when you prefer conversational interaction.
+| Complex multi-agent orchestration | Claude Code or OpenCode |
+| Native planning + review + delegation | **Copilot CLI** |
+| Path-specific instructions | **Copilot CLI** |
+| Workflow hooks/automation | **Copilot CLI** |
+| Already using Copilot CLI | **Copilot CLI** |
 
 ---
 
@@ -150,13 +229,20 @@ your-project/
 
 ```
 Copilot-cli-GSD/
-├── gsd-copilot-cli/          # The Copilot CLI adaptation (npm package)
-│   ├── copilot-instructions.md   # Core GSD system
-│   ├── bin/install.js            # Installer script
-│   ├── package.json
-│   └── README.md
-├── gsd-opencode/             # Original OpenCode version (git submodule)
-├── original/                  # Original TÂCHES version (git submodule)
+├── gsd-copilot-cli/          # The npm package
+│   ├── templates/
+│   │   ├── AGENTS.md                              # Core GSD workflow
+│   │   └── .github/
+│   │       ├── instructions/
+│   │       │   └── gsd-planning.instructions.md   # Path-specific
+│   │       └── hooks/
+│   │           └── gsd-hooks.json                 # Automation
+│   ├── copilot-instructions.md                    # Legacy format
+│   ├── bin/install.js
+│   └── package.json
+├── gsd-opencode/             # Original OpenCode version (submodule)
+├── original/                  # Original TÂCHES version (submodule)
+├── INTEGRATION-ANALYSIS.md   # Detailed analysis of CLI features
 ├── CLAUDE.md                 # Project instructions
 └── README.md                 # This file
 ```
@@ -177,8 +263,31 @@ git submodule update --init --recursive
 
 ```bash
 cd gsd-copilot-cli
-node bin/install.js --local
+node bin/install.js --minimal
 ```
+
+---
+
+## Troubleshooting
+
+**"Copilot doesn''t recognize GSD commands"**
+- Ensure `AGENTS.md` exists in project root
+- Try `/init` to reload instructions
+- Rephrase: "run the gsd new-project workflow"
+
+**"Context getting too long"**
+- Use `/compact` to summarize
+- Use `/context` to check usage
+- Start fresh with `/clear`
+
+**"Native /plan doesn''t match GSD format"**
+- GSD plan-phase uses /plan internally but saves to `.planning/` format
+- The workflow adapts native output to GSD structure
+
+**"Hooks not running"**
+- Hooks must be in `.github/hooks/` directory
+- Check JSON syntax: `cat .github/hooks/gsd-hooks.json | jq .`
+- Hooks only run with `--full` installation
 
 ---
 
@@ -186,24 +295,7 @@ node bin/install.js --local
 
 - **TÂCHES** — Original [Get Shit Done](https://github.com/glittercowboy/get-shit-done) for Claude Code
 - **rokicool** — [gsd-opencode](https://github.com/rokicool/gsd-opencode) adaptation for OpenCode
-
----
-
-## Troubleshooting
-
-**"Copilot doesn't recognize GSD commands"**
-- Make sure `copilot-instructions.md` exists in your project root
-- Run `/init` in Copilot CLI if prompted
-- Try rephrasing: "run the gsd new-project workflow"
-
-**"Context getting too long"**
-- Break into smaller phases
-- Use `gsd quick` for ad-hoc tasks
-- Start fresh context between phases
-
-**"Commands don't work like Claude Code"**
-- Copilot CLI doesn't have slash commands
-- Use conversational triggers: "gsd help" instead of "/gsd-help"
+- **GitHub** — Copilot CLI native features (`/plan`, `/review`, `/delegate`)
 
 ---
 
@@ -213,8 +305,17 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
+## Further Reading
+
+- [Copilot CLI Best Practices](https://docs.github.com/en/copilot/how-tos/copilot-cli/cli-best-practices)
+- [Adding Custom Instructions](https://docs.github.com/en/copilot/how-tos/copilot-cli/add-custom-instructions)
+- [Using Hooks](https://docs.github.com/en/copilot/how-tos/copilot-cli/use-hooks)
+- [AGENTS.md Standard](https://github.com/openai/agents.md)
+
+---
+
 <div align="center">
 
-**GSD for GitHub Copilot CLI — spec-driven development, conversationally**
+**GSD for GitHub Copilot CLI — native integration, spec-driven development**
 
 </div>

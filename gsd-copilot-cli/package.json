@@ -1,16 +1,18 @@
 {
   "name": "gsd-copilot-cli",
-  "version": "0.1.0",
-  "description": "GSD (Get Shit Done) meta-prompting system for GitHub Copilot CLI",
+  "version": "0.2.0",
+  "description": "GSD (Get Shit Done) workflow for GitHub Copilot CLI - native integration with /plan, /review, /delegate",
   "bin": {
     "gsd-copilot-cli": "bin/install.js"
   },
   "scripts": {
-    "install-local": "node bin/install.js --local",
-    "install-global": "node bin/install.js --global"
+    "install-minimal": "node bin/install.js --minimal",
+    "install-full": "node bin/install.js --full",
+    "install-legacy": "node bin/install.js --legacy"
   },
   "files": [
     "bin/",
+    "templates/",
     "copilot-instructions.md",
     "README.md"
   ],
@@ -20,6 +22,7 @@
     "copilot-cli",
     "gsd",
     "get-shit-done",
+    "agents-md",
     "meta-prompting",
     "spec-driven",
     "ai-development"
