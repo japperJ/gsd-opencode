@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [gsd-copilot-cli v0.3.0] - 2026-02-06
+
+Enhanced workflow with features from competitive research (SpecKit, oh-my-opencode, Aider, PIV-SpecKit, Claude Task Master).
+
+### Added
+- **`gsd constitution`** — Set project principles, coding standards, and architectural constraints (inspired by SpecKit)
+- **`gsd debug [issue]`** — Scientific debugging with persistent state, hypothesis testing, cognitive bias awareness, and 7 investigation techniques
+- **`gsd pause` / `gsd resume`** — Session management with `.planning/.continue-here` marker
+- **3-level artifact verification** for `gsd verify-work` — checks files are Existing, Substantive (not stubs), and Wired (imported/used)
+- **Planner-checker loop** for `gsd plan-phase` — self-validates plans across 6 dimensions before presenting to user (max 3 iterations)
+- **Deviation rules** for `gsd execute-phase` — 4-tier system: auto-fix bugs, add missing critical functionality, fix blockers, STOP on architectural changes
+- **Auto-test loop** for `gsd execute-phase` — runs tests after each task, auto-fixes failures (max 3 attempts)
+- **Atomic commit protocol** — one commit per task with structured messages, never `git add .`
+- **Pro install tier** (`--pro`) — AGENTS.md + all instruction files without experimental hooks
+- New instruction files: `gsd-verification.instructions.md`, `gsd-execution.instructions.md`, `gsd-debugging.instructions.md`
+
+### Changed
+- `gsd new-project` now includes optional Phase 4.5 (Constitution) for setting project standards
+- `gsd plan-phase` reads CONSTITUTION.md for consistent decision-making
+- `gsd execute-phase` applies deviation rules and runs tests automatically
+- `gsd verify-work` performs 3-level verification before `/review`
+- File structure updated with CONSTITUTION.md, debug/, and .continue-here
+- Interactive install now has 4 options (Minimal, Pro, Full, Legacy)
+
+### Fixed
+- `writeFileSync` argument order bug in install.js (was `writeFileSync(content, path)`, now `writeFileSync(path, content)`)
+
 ## [gsd-copilot-cli v0.2.2] - 2026-02-06
 
 Interactive selections and visual progress tracking.

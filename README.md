@@ -8,33 +8,24 @@ Based on [gsd-opencode](https://github.com/rokicool/gsd-opencode) by TÂCHES & r
 
 ---
 
-## What's New in v0.2.2
+## What's New in v0.3.0
 
-**Interactive selections & visual progress tracking**
+**Enhanced workflow with best features from the ecosystem**
 
-- **Selectable options** — Use arrow keys (↑↓) + Enter instead of typing responses
-- **Visual workplan** — See tasks with checkboxes as they complete:
-  ```
-  - [x] Task 1 ✓
-  - [→] Task 2 ← current  
-  - [ ] Task 3
-  ```
-- **Auto-continue** — Phases flow automatically after each response
-- **Better completion flow** — After verify, choose "Plan next phase" / "See progress" / "Done"
+- **`gsd constitution`** — Set project principles and coding standards (inspired by [SpecKit](https://github.com/github/spec-kit))
+- **`gsd debug`** — Scientific debugging with persistent state, hypothesis testing, and 7 investigation techniques
+- **`gsd pause` / `gsd resume`** — Session management across context resets
+- **3-level verification** — Checks artifacts are Existing, Substantive (not stubs), and Wired (imported/used)
+- **Planner-checker loop** — Plans self-validated across 6 dimensions before execution
+- **Deviation rules** — Auto-fix bugs/blockers, STOP on architectural changes
+- **Auto-test loop** — Runs tests after each task, auto-fixes failures
+- **Pro install tier** (`--pro`) — Instruction files without experimental hooks
 
-### v0.2.1 Features
+### Previous Versions
 
-- Questioning workflow enforced with STOP gates
-- Phase banners (GSD ► QUESTIONING, etc.)
-- 3-5 questions minimum before creating files
-
-### v0.2.0 Features
-
-| GSD Command | Uses Native | What Happens |
-|-------------|-------------|--------------|
-| `gsd plan-phase 1` | `/plan` | Structured planning with checkboxes |
-| `gsd verify-work 1` | `/review` | Code review with GSD criteria |
-| `gsd delegate-task` | `/delegate` | Async work via coding agent |
+- **v0.2.2** — Selectable options with arrow keys, visual workplan with live checkboxes, auto-continue between phases
+- **v0.2.1** — Questioning workflow enforced with STOP gates, phase banners, 3-5 questions minimum
+- **v0.2.0** — Native Copilot CLI integration (`/plan`, `/review`, `/delegate`)
 
 ---
 
@@ -97,8 +88,11 @@ Copilot CLI reads instructions in this order:
 |-------------|--------------|---------------------|
 | `gsd new-project` | Questioning → research → requirements → roadmap | Custom workflow |
 | `gsd plan-phase 1` | Research phase, then create structured plan | `/plan` |
-| `gsd execute-phase 1` | Execute tasks with atomic commits | File editing |
-| `gsd verify-work 1` | Verify against plan criteria | `/review` |
+| `gsd execute-phase 1` | Execute tasks with atomic commits + auto-test | File editing |
+| `gsd verify-work 1` | 3-level artifact verification + code review | `/review` |
+| `gsd constitution` | Set project principles and coding standards | Custom workflow |
+| `gsd debug [issue]` | Scientific debugging with persistent state | Custom workflow |
+| `gsd pause` / `resume` | Save/restore work state across sessions | Custom workflow |
 | `gsd delegate-task` | Offload work to async coding agent | `/delegate` |
 | `gsd progress` | Show current status and next action | File reading |
 | `gsd quick [task]` | Execute small ad-hoc task | Direct execution |
@@ -167,15 +161,18 @@ After `gsd new-project`:
 your-project/
 ├── AGENTS.md                  # GSD workflow instructions
 └── .planning/
+    ├── CONSTITUTION.md       # Project principles & standards
     ├── PROJECT.md            # Project vision
     ├── REQUIREMENTS.md       # Scoped requirements (REQ-XXX)
     ├── ROADMAP.md            # Phase breakdown with statuses
     ├── STATE.md              # Project memory (update frequently!)
+    ├── debug/                # Debug sessions (gsd debug)
     └── phases/
         ├── 01-foundation/
         │   ├── 01-RESEARCH.md
         │   ├── 01-01-PLAN.md
-        │   └── 01-01-SUMMARY.md
+        │   ├── 01-01-SUMMARY.md
+        │   └── 01-VERIFICATION.md
         └── 02-features/
             └── ...
 ```
@@ -198,7 +195,10 @@ node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js
 # Minimal — AGENTS.md only (recommended)
 node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --minimal
 
-# Full — AGENTS.md + .github/ instructions + hooks (experimental)
+# Pro — AGENTS.md + advanced instruction files (verification, execution, debugging)
+node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --pro
+
+# Full — Pro + hooks (experimental)
 node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --full
 
 # Legacy — copilot-instructions.md (v0.1 compatibility)
@@ -214,14 +214,21 @@ node /path/to/Copilot-cli-GSD/gsd-copilot-cli/bin/install.js --legacy
 └── AGENTS.md
 ```
 
-**Full:** ⚠️ *Experimental — uses newer CLI features that may behave inconsistently*
+**Pro:**
 ```
 ├── AGENTS.md
-└── .github/
-    ├── instructions/
-    │   └── gsd-planning.instructions.md   # Applies to .planning/**
-    └── hooks/
-        └── gsd-hooks.json                 # Session start/post-tool hooks
+└── .github/instructions/
+    ├── gsd-planning.instructions.md       # Path-specific for .planning/**
+    ├── gsd-verification.instructions.md   # 3-level artifact verification
+    ├── gsd-execution.instructions.md      # Deviation rules + auto-test
+    └── gsd-debugging.instructions.md      # Scientific debugging
+```
+
+**Full:** *Experimental — hooks may behave inconsistently*
+```
+├── (everything in Pro)
+└── .github/hooks/
+    └── gsd-hooks.json                     # Session start/post-tool hooks
 ```
 
 **Legacy:**
@@ -264,7 +271,10 @@ Copilot-cli-GSD/
 │   │   ├── AGENTS.md                              # Core GSD workflow
 │   │   └── .github/
 │   │       ├── instructions/
-│   │       │   └── gsd-planning.instructions.md   # Path-specific
+│   │       │   ├── gsd-planning.instructions.md   # Path-specific
+│   │       │   ├── gsd-verification.instructions.md # 3-level verification
+│   │       │   ├── gsd-execution.instructions.md  # Deviation rules
+│   │       │   └── gsd-debugging.instructions.md  # Scientific debugger
 │   │       └── hooks/
 │   │           └── gsd-hooks.json                 # Automation
 │   ├── copilot-instructions.md                    # Legacy format
@@ -326,6 +336,12 @@ node bin/install.js --minimal
 - **TÂCHES** — Original [Get Shit Done](https://github.com/glittercowboy/get-shit-done) for Claude Code
 - **rokicool** — [gsd-opencode](https://github.com/rokicool/gsd-opencode) adaptation for OpenCode
 - **GitHub** — Copilot CLI native features (`/plan`, `/review`, `/delegate`)
+
+**v0.3.0 inspired by:**
+- [SpecKit](https://github.com/github/spec-kit) — Constitution concept, spec-driven philosophy
+- [oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode) — Persistence patterns, session management
+- [Aider](https://github.com/paul-gauthier/aider) — Auto-test loop, repo-map awareness
+- [PIV-SpecKit](https://github.com/galando/piv-speckit) — Adaptive learning, auto-prime context
 
 ---
 

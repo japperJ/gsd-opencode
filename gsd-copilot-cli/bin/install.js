@@ -34,6 +34,7 @@ ${cyan}   ██████╗ ███████╗██████╗
 // Parse args
 const args = process.argv.slice(2);
 const hasMinimal = args.includes("--minimal") || args.includes("-m");
+const hasPro = args.includes("--pro") || args.includes("-p");
 const hasFull = args.includes("--full") || args.includes("-f");
 const hasLegacy = args.includes("--legacy");
 const hasHelp = args.includes("--help") || args.includes("-h");
@@ -47,7 +48,8 @@ if (hasHelp) {
 
   ${yellow}Options:${reset}
     ${cyan}-m, --minimal${reset}  Install only AGENTS.md (recommended)
-    ${cyan}-f, --full${reset}     Install all files (AGENTS.md + .github/ instructions + hooks)
+    ${cyan}-p, --pro${reset}      Install AGENTS.md + advanced instruction files
+    ${cyan}-f, --full${reset}     Install all files (Pro + hooks)
     ${cyan}--legacy${reset}       Install old copilot-instructions.md (for older CLI versions)
     ${cyan}-y, --yes${reset}      Skip confirmation prompt
     ${cyan}-h, --help${reset}     Show this help message
@@ -57,13 +59,18 @@ if (hasHelp) {
     ${cyan}Minimal (default):${reset}
     └── AGENTS.md                              Primary GSD instructions
 
-    ${cyan}Full:${reset}
+    ${cyan}Pro:${reset}
     ├── AGENTS.md                              Primary GSD instructions
-    └── .github/
-        ├── instructions/
-        │   └── gsd-planning.instructions.md   Path-specific for .planning/**
-        └── hooks/
-            └── gsd-hooks.json                 Workflow automation hooks
+    └── .github/instructions/
+        ├── gsd-planning.instructions.md       Path-specific for .planning/**
+        ├── gsd-verification.instructions.md   3-level artifact verification
+        ├── gsd-execution.instructions.md      Deviation rules + auto-test
+        └── gsd-debugging.instructions.md      Scientific debugging
+
+    ${cyan}Full:${reset}
+    ├── (everything in Pro)
+    └── .github/hooks/
+        └── gsd-hooks.json                     Workflow automation hooks
 
   ${yellow}Native CLI integration:${reset}
     GSD now leverages Copilot CLI's built-in features:
@@ -114,7 +121,7 @@ function copyFile(src, dest, description) {
     } else {
       // Append GSD to existing file
       const combined = destContent + "\n\n---\n\n" + srcContent;
-      fs.writeFileSync(combined, dest);
+      fs.writeFileSync(dest, combined);
       console.log(`  ${green}✓${reset} Appended GSD to ${description}`);
       return true;
     }
@@ -145,35 +152,72 @@ function installMinimal() {
 }
 
 /**
- * Install full (all files)
+ * Install pro (AGENTS.md + instruction files, no hooks)
  */
-function installFull() {
+function installPro() {
   const templatesDir = path.join(__dirname, "..", "templates");
   const destDir = process.cwd();
-  
-  console.log(`  ${yellow}Installing GSD files...${reset}\n`);
-  
+  const instrDir = path.join(".github", "instructions");
+
+  console.log(`  ${yellow}Installing GSD Pro files...${reset}\n`);
+
   // AGENTS.md
   copyFile(
     path.join(templatesDir, "AGENTS.md"),
     path.join(destDir, "AGENTS.md"),
     "AGENTS.md"
   );
-  
+
   // .github/instructions/gsd-planning.instructions.md
   copyFile(
-    path.join(templatesDir, ".github", "instructions", "gsd-planning.instructions.md"),
-    path.join(destDir, ".github", "instructions", "gsd-planning.instructions.md"),
+    path.join(templatesDir, instrDir, "gsd-planning.instructions.md"),
+    path.join(destDir, instrDir, "gsd-planning.instructions.md"),
     ".github/instructions/gsd-planning.instructions.md"
   );
-  
+
+  // .github/instructions/gsd-verification.instructions.md
+  copyFile(
+    path.join(templatesDir, instrDir, "gsd-verification.instructions.md"),
+    path.join(destDir, instrDir, "gsd-verification.instructions.md"),
+    ".github/instructions/gsd-verification.instructions.md"
+  );
+
+  // .github/instructions/gsd-execution.instructions.md
+  copyFile(
+    path.join(templatesDir, instrDir, "gsd-execution.instructions.md"),
+    path.join(destDir, instrDir, "gsd-execution.instructions.md"),
+    ".github/instructions/gsd-execution.instructions.md"
+  );
+
+  // .github/instructions/gsd-debugging.instructions.md
+  copyFile(
+    path.join(templatesDir, instrDir, "gsd-debugging.instructions.md"),
+    path.join(destDir, instrDir, "gsd-debugging.instructions.md"),
+    ".github/instructions/gsd-debugging.instructions.md"
+  );
+
+  return true;
+}
+
+/**
+ * Install full (all files)
+ */
+function installFull() {
+  const templatesDir = path.join(__dirname, "..", "templates");
+  const destDir = process.cwd();
+
+  console.log(`  ${yellow}Installing GSD files...${reset}\n`);
+
+  // Install all Pro files first
+  installPro();
+
   // .github/hooks/gsd-hooks.json
   copyFile(
     path.join(templatesDir, ".github", "hooks", "gsd-hooks.json"),
     path.join(destDir, ".github", "hooks", "gsd-hooks.json"),
     ".github/hooks/gsd-hooks.json"
   );
-  
+
   return true;
 }
 
@@ -200,8 +244,10 @@ function installLegacy() {
  * Show usage instructions
  */
 function showUsage(mode) {
-  const files = mode === "full" 
-    ? "AGENTS.md + .github/ files"
+  const files = mode === "full"
+    ? "AGENTS.md + .github/ files (instructions + hooks)"
+    : mode === "pro"
+    ? "AGENTS.md + .github/instructions/ files"
     : mode === "legacy"
     ? "copilot-instructions.md"
     : "AGENTS.md";
@@ -221,6 +267,9 @@ function showUsage(mode) {
      ${dim}"gsd plan-phase 1"${reset}     Plan using native /plan
      ${dim}"gsd execute-phase 1"${reset}  Execute phase 1
      ${dim}"gsd verify-work 1"${reset}    Verify using native /review
+     ${dim}"gsd constitution"${reset}     Set project principles
+     ${dim}"gsd debug [issue]"${reset}    Debug with scientific method
+     ${dim}"gsd pause / resume"${reset}   Save/restore work state
      ${dim}"gsd progress"${reset}         Check current status
      ${dim}"gsd help"${reset}             Show all commands
 
@@ -244,6 +293,9 @@ function install() {
   if (hasFull) {
     mode = "full";
     installFull();
+  } else if (hasPro) {
+    mode = "pro";
+    installPro();
   } else if (hasLegacy) {
     mode = "legacy";
     installLegacy();
@@ -273,23 +325,27 @@ function promptInstall() {
   const agentsExists = fs.existsSync(path.join(process.cwd(), "AGENTS.md"));
   
   console.log(`  ${yellow}GSD Installation Options:${reset}
-  
+
   ${cyan}1.${reset} Minimal (recommended) — AGENTS.md only
-  ${cyan}2.${reset} Full — AGENTS.md + path-specific instructions + hooks
-  ${cyan}3.${reset} Legacy — copilot-instructions.md (for older CLI versions)
+  ${cyan}2.${reset} Pro — AGENTS.md + advanced instruction files
+  ${cyan}3.${reset} Full — Pro + hooks (experimental)
+  ${cyan}4.${reset} Legacy — copilot-instructions.md (for older CLI versions)
   `);
 
-  rl.question(`  Choice ${dim}[1/2/3]${reset}: `, (answer) => {
+  rl.question(`  Choice ${dim}[1/2/3/4]${reset}: `, (answer) => {
     rl.close();
     const choice = answer.trim() || "1";
-    
+
     if (choice === "1") {
       installMinimal();
       showUsage("minimal");
     } else if (choice === "2") {
+      installPro();
+      showUsage("pro");
+    } else if (choice === "3") {
       installFull();
       showUsage("full");
-    } else if (choice === "3") {
+    } else if (choice === "4") {
       installLegacy();
       showUsage("legacy");
     } else {
@@ -299,7 +355,7 @@ function promptInstall() {
 }
 
 // Main
-if (hasMinimal || hasFull || hasLegacy || hasYes) {
+if (hasMinimal || hasPro || hasFull || hasLegacy || hasYes) {
   install();
 } else {
   promptInstall();

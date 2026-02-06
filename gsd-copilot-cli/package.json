@@ -1,12 +1,13 @@
 {
   "name": "gsd-copilot-cli",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "GSD (Get Shit Done) workflow for GitHub Copilot CLI - native integration with /plan, /review, /delegate",
   "bin": {
     "gsd-copilot-cli": "bin/install.js"
   },
   "scripts": {
     "install-minimal": "node bin/install.js --minimal",
+    "install-pro": "node bin/install.js --pro",
     "install-full": "node bin/install.js --full",
     "install-legacy": "node bin/install.js --legacy"
   },

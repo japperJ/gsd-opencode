@@ -29,9 +29,13 @@ If you need users to approve something (requirements, roadmap, plan), you MUST i
 | `gsd new-project [description]` | **START QUESTIONING** (do NOT build yet) |
 | `gsd plan-phase N` | Plan phase N |
 | `gsd execute-phase N` | Execute phase N |
-| `gsd verify-work N` | Review phase N |
+| `gsd verify-work N` | Review phase N (3-level verification) |
 | `gsd progress` | Show status |
 | `gsd quick [task]` | Small immediate task |
+| `gsd constitution` | Set project principles & standards |
+| `gsd debug [issue]` | Debug with scientific method |
+| `gsd pause` | Save work state for later |
+| `gsd resume` | Resume from saved state |
 
 ---
 
@@ -138,15 +142,34 @@ ask_user(
 
 **The question text MUST contain the full roadmap so users can see what they're approving.**
 
-**When user answers Yes → continue to Phase 5 IN THE SAME RESPONSE.**
+**When user answers Yes → continue to Phase 4.5 IN THE SAME RESPONSE.**
+
+---
+
+### PHASE 4.5: CONSTITUTION (optional)
+
+**Use ask_user:**
+```
+ask_user(
+  question: "Set project coding standards and principles now?",
+  options: ["Yes, set standards", "No, skip for now"]
+)
+```
+
+**If yes:** Ask about coding standards, testing philosophy, and architecture style (see `gsd constitution` command for details). Include answers in CONSTITUTION.md during Phase 5.
+
+**If no:** Skip. Can be set later with `gsd constitution`.
+
+**→ Continue to Phase 5 IN THE SAME RESPONSE.**
 
 ---
 
 ### PHASE 5: CREATE FILES
 
 **NOW create files** in `.planning/`:
+- CONSTITUTION.md — Project principles (if set in Phase 4.5)
 - PROJECT.md — Vision
-- REQUIREMENTS.md — Approved requirements  
+- REQUIREMENTS.md — Approved requirements
 - ROADMAP.md — Approved roadmap
 - STATE.md — Status set to "Ready to plan phase 1"
 
@@ -175,9 +198,14 @@ If "later" → stop and wait.
 ## gsd plan-phase N
 
 1. Read `.planning/ROADMAP.md` for phase N details
-2. Use `/plan` to create implementation plan
-3. Save plan to `.planning/phases/0N-name/0N-01-PLAN.md`
-4. Update STATE.md: Status = 🟡 Planned
+2. Read `.planning/CONSTITUTION.md` if it exists (project principles guide planning)
+3. Use `/plan` to create implementation plan
+4. **Self-verify plan** across 6 dimensions (see gsd-execution.instructions.md):
+   - Requirement coverage, task completeness, dependency correctness
+   - Wiring planned, scope sanity, verifiability
+   - If issues found: revise and re-check (max 3 iterations)
+5. Save plan to `.planning/phases/0N-name/0N-01-PLAN.md`
+6. Update STATE.md: Status = 🟡 Planned
 
 **🚨 CRITICAL: Include the plan IN the ask_user question text.**
 
@@ -215,7 +243,11 @@ If "execute now" → run gsd execute-phase N workflow.
 2. For each task:
    - **Show:** `[→] Working on: [task description]`
    - Execute the task
-   - Commit changes
+   - **Apply deviation rules** (see gsd-execution.instructions.md):
+     - Auto-fix bugs, missing critical functionality, blockers
+     - STOP and ask user on architectural changes
+   - **Run tests** if test suite exists (auto-fix failures, max 3 attempts)
+   - Commit changes (one atomic commit per task, never `git add .`)
    - **Show:** `[✓] Completed: [task description]`
    - Update the progress display
 
@@ -242,9 +274,13 @@ If "execute now" → run gsd execute-phase N workflow.
 
 ## gsd verify-work N
 
-1. Use `/review` to check implementation
-2. Verify: All tasks done, code works, tests pass
-3. Update STATE.md: Status = 🟢 Verified or 🔴 Needs fixes
+1. **Perform 3-level artifact verification** (see gsd-verification.instructions.md):
+   - Level 1: Files exist
+   - Level 2: Files are substantive (not stubs)
+   - Level 3: Files are wired (imported and used)
+2. Use `/review` to check code quality
+3. Verify: All tasks done, code works, tests pass
+4. Update STATE.md: Status = 🟢 Verified or 🔴 Needs fixes
 
 **Use ask_user with options:**
 - Question: "Verification complete. Result?"
@@ -317,18 +353,124 @@ Use `/delegate [description]` for async work.
 
 ---
 
+## gsd constitution
+
+Set project principles and coding standards. Can be run standalone or as part of `gsd new-project`.
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► CONSTITUTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Use ask_user to gather project principles:**
+
+1. Ask about **coding standards**:
+   - Options: "Strict (linting, formatting, types)", "Moderate (types optional)", "Relaxed (move fast)"
+
+2. Ask about **testing philosophy**:
+   - Options: "TDD (tests first)", "Test after implementation", "Critical paths only", "No tests yet"
+
+3. Ask about **architecture style**:
+   - Options: "Monolith", "Modular monolith", "Microservices", "Whatever fits"
+
+4. Ask about **key constraints** as free text if needed (performance targets, browser support, accessibility).
+
+**Create `.planning/CONSTITUTION.md`** with:
+- Tech stack decisions (from questioning or prior context)
+- Coding standards and conventions
+- Testing approach
+- Architectural principles and constraints
+- Any non-negotiable rules
+
+**All subsequent gsd commands reference CONSTITUTION.md** for consistent decision-making.
+
+---
+
+## gsd debug [issue]
+
+Scientific debugging with persistent state. See gsd-debugging.instructions.md for full methodology.
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► DEBUGGING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+1. Create or load `.planning/debug/{issue-slug}.md` (persistent debug state)
+2. If loading existing: show current status, hypotheses, evidence log
+3. Gather symptoms from user via ask_user
+4. Follow scientific method: observe → hypothesize → test → conclude
+5. Avoid cognitive biases (confirmation, anchoring, availability, sunk cost)
+6. Use 7 investigation techniques as needed
+7. Update debug file after every significant finding
+8. When resolved: present fix, move debug file to `.planning/debug/resolved/`
+
+---
+
+## gsd pause
+
+Save current work state for later resumption.
+
+1. Read current STATE.md
+2. Record in `.planning/.continue-here`:
+   - Current phase and task
+   - Git branch name
+   - Uncommitted changes (if any)
+   - Last action performed
+   - Suggested next step
+3. Update STATE.md: Status = ⏸️ Paused
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► PAUSED
+ Resume with: gsd resume
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+---
+
+## gsd resume
+
+Resume from saved state.
+
+1. Read STATE.md and `.planning/.continue-here`
+2. If no `.continue-here` exists, read STATE.md for last known position
+
+Display current state and ask via ask_user:
+```
+ask_user(
+  question: "━━━ GSD ► RESUMING ━━━\n\nLast action: [from state]\nCurrent phase: [phase]\nNext step: [suggestion]\n\nWhat would you like to do?",
+  options: ["Continue where I left off", "Start fresh on current phase", "Show progress first"]
+)
+```
+
+If "Continue" → execute the suggested next step.
+If "Start fresh" → re-plan current phase.
+If "Show progress" → run gsd progress.
+
+---
+
 ## File Structure
 
 ```
 .planning/
+├── CONSTITUTION.md         # Project principles & standards
 ├── PROJECT.md              # Vision
 ├── REQUIREMENTS.md         # Scoped requirements
 ├── ROADMAP.md              # Phases
 ├── STATE.md                # Current state (update often!)
+├── .continue-here          # Resume marker (gsd pause/resume)
+├── debug/                  # Active debug sessions
+│   └── resolved/           # Archived resolved issues
 └── phases/
     └── 01-foundation/
         ├── 01-01-PLAN.md
-        └── 01-01-SUMMARY.md
+        ├── 01-01-SUMMARY.md
+        └── 01-VERIFICATION.md
 ```
 
 ---
