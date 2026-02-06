@@ -31,37 +31,36 @@ When triggered, you MUST execute these phases IN ORDER. Do NOT skip any phase.
 
 ### PHASE 1: QUESTIONING (MANDATORY)
 
-**👤 ANNOUNCE:** Display this banner:
+**Display this banner, then immediately ask questions:**
+
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  GSD ► QUESTIONING
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-**🛑 DO NOT CREATE FILES. DO NOT WRITE CODE. ASK QUESTIONS.**
+**🛑 DO NOT CREATE FILES. DO NOT WRITE CODE.**
 
-Start with: "What do you want to build? Tell me more about it."
+**Immediately ask these questions in your response (do not wait for a tool):**
 
-Then ask probing questions about:
-- **WHO** — Who will use this? What's their context?
-- **WHAT** — What does it need to do? What are the core features?
-- **WHY** — What problem does it solve? Why now?
-- **HOW** — Any technology preferences? Constraints?
-- **SCOPE** — What's v1 vs later? What's explicitly NOT included?
+"Before I start building, I need to understand a few things:
 
-**KEEP ASKING until you can answer ALL of these:**
-- [ ] What is the core value proposition?
-- [ ] Who is the target user?
-- [ ] What are the 3-5 must-have features?
-- [ ] What are the constraints (time, tech, etc.)?
-- [ ] What is explicitly out of scope?
+1. **Who is this for?** (yourself, friends, public?)
+2. **What features matter most?** (scoring, levels, mobile support, multiplayer?)
+3. **Any specific tech requirements?** (vanilla JS only, framework preference, styling?)
+4. **What's the scope?** What should v1 include vs later versions?
+5. **What should I NOT include?** (to keep scope clear)
 
-**ASK AT LEAST 3-5 QUESTIONS before proceeding.**
+Please answer these so I can plan properly."
+
+**WAIT for user to respond before proceeding.**
+
+After they answer, you may ask follow-up questions if anything is unclear.
 
 When you have clarity, ask:
 > "I think I understand. Ready to define requirements, or do you want to share more?"
 
-Only proceed when user confirms they're ready.
+Only proceed when user says they're ready.
 
 ---
 
