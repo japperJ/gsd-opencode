@@ -243,6 +243,27 @@ If "execute now" → run gsd execute-phase N workflow.
 - Question: "Verification complete. Result?"
 - Options: "All good, continue", "Issues found, needs fixes"
 
+**If "All good, continue":**
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► PHASE N VERIFIED ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Then immediately use ask_user:**
+- Question: "What would you like to do next?"
+- Options: "Plan next phase", "See project progress", "I'm done for now"
+
+If "Plan next phase" → run gsd plan-phase (N+1) workflow.
+If "See project progress" → run gsd progress workflow.
+
+**If "Issues found, needs fixes":**
+- Ask what issues were found
+- Create fix tasks
+- Re-run execution for fixes
+
 ---
 
 ## gsd progress
