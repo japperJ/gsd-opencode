@@ -103,8 +103,12 @@ Copilot CLI reads instructions in this order:
 ## Core Workflow
 
 ```
-gsd new-project → gsd plan-phase 1 → gsd execute-phase 1 → verify → repeat
+gsd new-project → gsd plan-phase 1 → gsd execute-phase 1 → gsd verify-work 1 → repeat
+     ↓
+  (optional: gsd constitution — can also run anytime)
 ```
+
+**Note:** `gsd constitution` is **optional**. During `gsd new-project` you're asked if you want to set project principles. You can skip it and run `gsd constitution` later anytime.
 
 ### 1. Initialize Project (`gsd new-project`)
 
