@@ -27,9 +27,11 @@ The user's description after "gsd new-project" is just initial context — NOT p
 
 ## gsd new-project — MANDATORY WORKFLOW
 
-When triggered, you MUST execute these phases IN ORDER. Do NOT skip any phase.
+**CRITICAL: This is ONE continuous conversation. After each user response, AUTOMATICALLY continue to the next phase. Do NOT stop and wait for a new command.**
 
-### PHASE 1: QUESTIONING (MANDATORY)
+When triggered, execute these phases IN ORDER:
+
+### PHASE 1: QUESTIONING
 
 **Display this banner, then immediately ask questions:**
 
@@ -41,148 +43,104 @@ When triggered, you MUST execute these phases IN ORDER. Do NOT skip any phase.
 
 **🛑 DO NOT CREATE FILES. DO NOT WRITE CODE.**
 
-**Immediately ask these questions in your response (do not wait for a tool):**
+Ask:
+> "Before I start building, I need to understand:
+> 1. **Who is this for?** (yourself, friends, public?)
+> 2. **What features matter most?**
+> 3. **Any tech requirements?** (vanilla JS, specific framework?)
+> 4. **What's v1 scope vs later?**
+> 5. **What should I NOT include?**"
 
-"Before I start building, I need to understand a few things:
-
-1. **Who is this for?** (yourself, friends, public?)
-2. **What features matter most?** (scoring, levels, mobile support, multiplayer?)
-3. **Any specific tech requirements?** (vanilla JS only, framework preference, styling?)
-4. **What's the scope?** What should v1 include vs later versions?
-5. **What should I NOT include?** (to keep scope clear)
-
-Please answer these so I can plan properly."
-
-**WAIT for user to respond before proceeding.**
-
-After they answer, you may ask follow-up questions if anything is unclear.
-
-When you have clarity, ask:
-> "I think I understand. Ready to define requirements, or do you want to share more?"
-
-Only proceed when user says they're ready.
+**Wait for user to answer → then AUTOMATICALLY continue to Phase 2.**
 
 ---
 
-### PHASE 2: RESEARCH (OPTIONAL)
+### PHASE 2: RESEARCH (quick check)
 
-Ask the user:
-> "Would you like me to research best practices for [domain] before we plan? (yes/no)"
+Ask: "Want me to quickly research best practices for [domain]? (yes/no)"
 
-**If yes:**
-- Research standard stacks for this type of project
-- Find recommended libraries/frameworks
-- Identify common pitfalls
-- Share findings and ask for user input
+- If yes: Do quick research, share key findings
+- If no: Skip
 
-**If no:** Skip to Phase 3.
+**After research (or skip) → AUTOMATICALLY continue to Phase 3.**
 
 ---
 
 ### PHASE 3: REQUIREMENTS
 
-**👤 ANNOUNCE:** Display this banner:
+Display:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  GSD ► DEFINING REQUIREMENTS  
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Based on the questioning, present requirements to the user:
-
+Present requirements based on what user said:
 ```
-## Proposed Requirements
+## V1 Requirements
+- REQ-001: [from their answers]
+- REQ-002: [from their answers]
 
-### V1 (Must Have)
-- REQ-001: [requirement from questioning]
-- REQ-002: [requirement]
-- REQ-003: [requirement]
-
-### V2 (Nice to Have)
-- REQ-101: [deferred item]
-
-### Out of Scope
-- [explicitly excluded]
+## Out of Scope
+- [what they said to exclude]
 ```
 
-Ask: "Does this capture what you need? Any additions or changes?"
+Ask: "Does this look right? (yes / changes needed)"
 
-**Wait for confirmation before proceeding.**
+**If yes → AUTOMATICALLY continue to Phase 4.**
+**If changes → make changes, then continue to Phase 4.**
 
 ---
 
 ### PHASE 4: ROADMAP
 
-**👤 ANNOUNCE:** Display this banner:
+Display:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  GSD ► CREATING ROADMAP
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-Propose phases based on requirements:
-
+Propose phases:
 ```
-## Proposed Roadmap
-
-### Phase 1: [Name] — [Goal]
-- [Key deliverable]
-- [Key deliverable]
+## Phase 1: [Name]
+- [deliverable]
 Requirements: REQ-001, REQ-002
 
-### Phase 2: [Name] — [Goal]
-Depends on: Phase 1
-- [Key deliverable]
-Requirements: REQ-003
-
-[etc.]
+## Phase 2: [Name]  
+- [deliverable]
 ```
 
-Ask: "Does this structure make sense? Any reordering needed?"
+Ask: "Does this structure work? (yes / changes needed)"
 
-**Wait for confirmation before proceeding.**
+**If yes → AUTOMATICALLY continue to Phase 5.**
 
 ---
 
 ### PHASE 5: CREATE FILES
 
-**ONLY NOW may you create files.**
-
-Create these in `.planning/`:
-
-1. **PROJECT.md** — Vision and key decisions
-2. **REQUIREMENTS.md** — The approved requirements  
-3. **ROADMAP.md** — The approved roadmap
-4. **STATE.md** — Current status:
-
-```markdown
-# Project State
-
-Current Phase: Phase 1
-Status: 🟡 Ready to plan
-Next Action: Run `gsd plan-phase 1`
-```
+**NOW create files** in `.planning/`:
+- PROJECT.md — Vision
+- REQUIREMENTS.md — Approved requirements  
+- ROADMAP.md — Approved roadmap
+- STATE.md — Status set to "Ready to plan phase 1"
 
 ---
 
-### PHASE 6: COMPLETION
+### PHASE 6: DONE
 
-**👤 ANNOUNCE:**
+Display:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  GSD ► PROJECT INITIALIZED ✓
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Files created:
-- .planning/PROJECT.md
-- .planning/REQUIREMENTS.md
-- .planning/ROADMAP.md
-- .planning/STATE.md
+Files created in .planning/
 
-Next: Run `gsd plan-phase 1` to start planning.
+Next: Say "gsd plan-phase 1" to start planning.
 ```
 
-**STOP. Do not start building. Wait for user to trigger next command.**
+**NOW stop and wait for next command.**
 
 ---
 
