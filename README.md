@@ -211,6 +211,34 @@ node <path-to-clone>/gsd-copilot-cli/bin/install.js --legacy
 
 **Future:** Once published to npm, you'll be able to use `npx gsd-copilot-cli`.
 
+### Installation Tiers Explained
+
+**Minimal** — Single-file setup
+- Copies only `AGENTS.md` with the entire GSD workflow
+- Copilot CLI reads this one file to understand all commands
+- Lightest weight, works everywhere Copilot CLI is installed
+- Recommended for getting started
+
+**Pro** — Modular instructions (recommended for sustained work)
+- Copies `AGENTS.md` (same as Minimal)
+- PLUS 4 modular instruction files in `.github/instructions/`
+- Each file handles one area: planning, verification, execution, debugging
+- Copilot CLI **auto-loads** these files based on path patterns (no manual intervention)
+- Benefit: Keeps AGENTS.md lean (486 lines instead of bloated) while providing full feature set
+- Best balance of features and efficiency
+
+**Full** — Pro + workflow automation (experimental)
+- Same as Pro
+- PLUS `gsd-hooks.json` for automatic triggers
+- Hooks can run commands on Copilot CLI events (e.g., "when user says X, run Y first")
+- Marked experimental because hook behavior varies across Copilot CLI versions
+- Only use if you want to experiment with automation
+
+**Legacy** — v0.1 compatibility
+- Single file `copilot-instructions.md` in repo root
+- Old instruction format that Copilot CLI still recognizes
+- Provided for backwards compatibility with older setups
+
 ### What Each Option Creates
 
 **Minimal (recommended):**
