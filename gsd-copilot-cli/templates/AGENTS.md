@@ -11,6 +11,8 @@ The user's description after "gsd new-project" is just initial context — NOT p
 
 **Use `ask_user` tool for all user choices** — present selectable options (up/down + Enter) instead of asking users to type responses.
 
+**ALWAYS show content before asking for confirmation** — if asking "Does this look right?", you MUST display what "this" is in your message FIRST. Users cannot approve what they cannot see.
+
 ---
 
 ## Commands
@@ -67,8 +69,17 @@ Display:
 - Question: "Research best practices for [domain] first?"
 - Options: "Yes, research first", "No, skip to requirements"
 
-- If yes: Do quick web search, share key findings
-- If no: Skip
+**If yes:** 
+1. Do quick web search
+2. **Display key findings in your message** before proceeding:
+   ```
+   ## Research Findings
+   - [key finding 1]
+   - [key finding 2]
+   - [recommended approach]
+   ```
+
+**If no:** Skip to Phase 3.
 
 **After research (or skip) → AUTOMATICALLY continue to Phase 3.**
 
@@ -76,24 +87,26 @@ Display:
 
 ### PHASE 3: REQUIREMENTS
 
-Display:
+Display this banner AND the full requirements list in your message:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  GSD ► DEFINING REQUIREMENTS  
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
 
-Present requirements based on what user said:
-```
 ## V1 Requirements
-- REQ-001: [from their answers]
-- REQ-002: [from their answers]
+- REQ-001: [specific requirement from their answers]
+- REQ-002: [specific requirement]
+- REQ-003: [specific requirement]
 
 ## Out of Scope
-- [what they said to exclude]
+- [item 1]
+- [item 2]
 ```
 
-**Use ask_user with options:**
+**IMPORTANT: You MUST display all requirements in your message BEFORE asking for confirmation.**
+The user cannot approve what they cannot see.
+
+**THEN use ask_user with options:**
 - Question: "Does this look right?"
 - Options: "Yes, continue", "No, make changes"
 
@@ -104,24 +117,25 @@ Present requirements based on what user said:
 
 ### PHASE 4: ROADMAP
 
-Display:
+Display this banner AND the full roadmap in your message:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  GSD ► CREATING ROADMAP
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
 
-Propose phases:
-```
-## Phase 1: [Name]
-- [deliverable]
+## Phase 1: [Name] — [Goal]
+- [deliverable 1]
+- [deliverable 2]
 Requirements: REQ-001, REQ-002
 
-## Phase 2: [Name]  
-- [deliverable]
+## Phase 2: [Name] — [Goal]
+- [deliverable 1]
+Requirements: REQ-003
 ```
 
-**Use ask_user with options:**
+**IMPORTANT: You MUST display the full roadmap in your message BEFORE asking for confirmation.**
+
+**THEN use ask_user with options:**
 - Question: "Does this roadmap work?"
 - Options: "Yes, create files", "No, adjust phases"
 
@@ -166,19 +180,21 @@ If "later" → stop and wait.
 3. Save plan to `.planning/phases/0N-name/0N-01-PLAN.md`
 4. Update STATE.md: Status = 🟡 Planned
 
-**Display the plan with checkboxes:**
+**Display the full plan with checkboxes in your message:**
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  GSD ► PHASE N PLAN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Tasks
-- [ ] Task 1: [description]
-- [ ] Task 2: [description]
-- [ ] Task 3: [description]
+- [ ] Task 1: [specific description]
+- [ ] Task 2: [specific description]
+- [ ] Task 3: [specific description]
 ```
 
-**Use ask_user with options:**
+**IMPORTANT: Show ALL tasks in your message BEFORE asking for confirmation.**
+
+**THEN use ask_user with options:**
 - Question: "Phase N planned. Ready to execute?"
 - Options: "Yes, execute now", "No, I'll review first"
 
