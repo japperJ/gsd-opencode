@@ -11,7 +11,11 @@ The user's description after "gsd new-project" is just initial context — NOT p
 
 **Use `ask_user` tool for all user choices** — present selectable options (up/down + Enter) instead of asking users to type responses.
 
-**ALWAYS show content before asking for confirmation** — if asking "Does this look right?", you MUST display what "this" is in your message FIRST. Users cannot approve what they cannot see.
+**ALWAYS show content before asking for confirmation** — if asking "Does this look right?", you MUST display what "this" is in your message FIRST.
+
+**🚨 NEVER pause between phases to announce what you're about to do.**
+- WRONG: "Next, I'll define the requirements and confirm with you." (then stopping)
+- RIGHT: Just display the requirements and call ask_user immediately.
 
 ---
 
@@ -31,7 +35,16 @@ The user's description after "gsd new-project" is just initial context — NOT p
 
 ## gsd new-project — MANDATORY WORKFLOW
 
-**CRITICAL: This is ONE continuous conversation. After each user response, AUTOMATICALLY continue to the next phase. Do NOT stop and wait for a new command.**
+**🚨 CRITICAL RULE: NEVER STOP BETWEEN PHASES**
+
+This workflow is ONE continuous conversation. After EACH user response:
+1. Process their answer
+2. **IMMEDIATELY** continue to the next phase IN THE SAME MESSAGE
+3. Do NOT say "Next, I'll..." — just DO IT
+4. Only stop when calling `ask_user` for the next confirmation
+
+**WRONG:** "I'll now define the requirements and ask you to confirm."
+**RIGHT:** Just display the requirements and call ask_user.
 
 When triggered, execute these phases IN ORDER:
 
@@ -71,21 +84,19 @@ Display:
 
 **If yes:** 
 1. Do quick web search
-2. **Display key findings in your message** before proceeding:
-   ```
-   ## Research Findings
-   - [key finding 1]
-   - [key finding 2]
-   - [recommended approach]
-   ```
+2. **Display key findings in your message**
 
-**If no:** Skip to Phase 3.
+**If no:** Skip directly to Phase 3.
 
-**After research (or skip) → AUTOMATICALLY continue to Phase 3.**
+**🚨 CRITICAL: In the SAME message where you display research findings (or skip message), you MUST ALSO display the Phase 3 banner and requirements. Do NOT stop after research. Do NOT say "Next, I'll..." — just DO it immediately.**
+
+**→ Continue to Phase 3 IN THIS SAME RESPONSE.**
 
 ---
 
 ### PHASE 3: REQUIREMENTS
+
+**🚨 This phase happens IMMEDIATELY after Phase 2 — in the SAME message.**
 
 Display this banner AND the full requirements list in your message:
 ```
@@ -103,19 +114,19 @@ Display this banner AND the full requirements list in your message:
 - [item 2]
 ```
 
-**IMPORTANT: You MUST display all requirements in your message BEFORE asking for confirmation.**
-The user cannot approve what they cannot see.
+**All requirements MUST be visible in your message BEFORE calling ask_user.**
 
-**THEN use ask_user with options:**
-- Question: "Does this look right?"
+**THEN call ask_user:**
+- Question: "Does this requirements list look right?"
 - Options: "Yes, continue", "No, make changes"
 
-**If yes → AUTOMATICALLY continue to Phase 4.**
-**If changes → ask what to change, then continue to Phase 4.**
+**When user answers → continue to Phase 4 IN THE SAME RESPONSE.**
 
 ---
 
 ### PHASE 4: ROADMAP
+
+**🚨 This phase happens IMMEDIATELY after Phase 3 — in the SAME message.**
 
 Display this banner AND the full roadmap in your message:
 ```
@@ -133,13 +144,13 @@ Requirements: REQ-001, REQ-002
 Requirements: REQ-003
 ```
 
-**IMPORTANT: You MUST display the full roadmap in your message BEFORE asking for confirmation.**
+**All roadmap content MUST be visible BEFORE calling ask_user.**
 
-**THEN use ask_user with options:**
+**THEN call ask_user:**
 - Question: "Does this roadmap work?"
 - Options: "Yes, create files", "No, adjust phases"
 
-**If yes → AUTOMATICALLY continue to Phase 5.**
+**When user answers Yes → continue to Phase 5 IN THE SAME RESPONSE.**
 
 ---
 
