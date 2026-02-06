@@ -1,0 +1,36 @@
+{
+  "name": "gsd-copilot-cli",
+  "version": "0.1.0",
+  "description": "GSD (Get Shit Done) meta-prompting system for GitHub Copilot CLI",
+  "bin": {
+    "gsd-copilot-cli": "bin/install.js"
+  },
+  "scripts": {
+    "install-local": "node bin/install.js --local",
+    "install-global": "node bin/install.js --global"
+  },
+  "files": [
+    "bin/",
+    "copilot-instructions.md",
+    "README.md"
+  ],
+  "keywords": [
+    "copilot",
+    "github-copilot",
+    "copilot-cli",
+    "gsd",
+    "get-shit-done",
+    "meta-prompting",
+    "spec-driven",
+    "ai-development"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rokicool/gsd-copilot-cli"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
