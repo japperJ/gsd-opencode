@@ -119,6 +119,7 @@ Options:
   -f, --full     Install all files (AGENTS.md + .github/ + hooks)
   --legacy       Install copilot-instructions.md (v0.1)
   -y, --yes      Skip confirmation
+  -Y, --yolo     Auto-approve all tool execution (npx, npm, shell commands)
   -h, --help     Show help
 ```
 

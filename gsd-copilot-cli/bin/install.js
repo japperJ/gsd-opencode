@@ -3,7 +3,6 @@
 const fs = require("fs");
 const path = require("path");
 const readline = require("readline");
-const { spawnSync } = require("child_process");
 
 // Colors
 const cyan = "\x1b[36m";
@@ -46,7 +45,7 @@ console.log(banner);
 
 // Show help if requested
 if (hasHelp) {
-  console.log(`  ${yellow}Usage:${reset} npx gsd-copilot-cli [options]
+  console.log(`  ${yellow}Usage:${reset} node gsd-opencode/gsd-copilot-cli/bin/install.js [options]
 
   ${yellow}Options:${reset}
     ${cyan}-m, --minimal${reset}  Install only AGENTS.md (recommended)
@@ -286,24 +285,16 @@ function showUsage(mode) {
 }
 
 /**
- * Launch Copilot CLI after install
+ * Show the next step command to copy-paste
  */
-function launchCopilot() {
-  const copilotArgs = hasYolo ? ["--yolo"] : [];
-  const label = hasYolo ? "copilot --yolo" : "copilot";
-  console.log(`  ${yellow}Launching:${reset} ${cyan}${label}${reset}`);
+function showNextStep() {
+  const cmd = hasYolo ? "copilot --yolo" : "copilot";
+  console.log(`  ${yellow}Next step — copy and run:${reset}\n`);
+  console.log(`  ${cyan}${cmd}${reset}`);
   if (hasYolo) {
     console.log(`  ${dim}(⚡ YOLO mode: all tools, paths & URLs auto-approved)${reset}`);
   }
   console.log();
-  const result = spawnSync("copilot", copilotArgs, {
-    stdio: "inherit",
-    shell: true,
-  });
-  if (result.error) {
-    console.log(`  ${yellow}Could not launch copilot automatically.${reset}`);
-    console.log(`  ${yellow}Run manually:${reset} ${cyan}${label}${reset}\n`);
-  }
 }
 
 /**
@@ -333,7 +324,7 @@ function install() {
   }
   
   showUsage(mode);
-  launchCopilot();
+  showNextStep();
 }
 
 /**
@@ -388,12 +379,12 @@ function promptInstall() {
           hasYolo = true;
         }
         showUsage(mode);
-        launchCopilot();
+        showNextStep();
       });
     } else {
       rl.close();
       showUsage(mode);
-      launchCopilot();
+      showNextStep();
     }
   });
 }

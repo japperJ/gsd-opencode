@@ -201,6 +201,9 @@ node gsd-opencode/gsd-copilot-cli/bin/install.js --full
 
 # Legacy — copilot-instructions.md (v0.1 compatibility)
 node gsd-opencode/gsd-copilot-cli/bin/install.js --legacy
+
+# Add --yolo to auto-approve all tool execution (optional)
+node gsd-opencode/gsd-copilot-cli/bin/install.js --minimal --yolo
 ```
 
 **Future:** Once published to npm, you'll be able to use `npx gsd-copilot-cli`.
