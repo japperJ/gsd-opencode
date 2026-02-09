@@ -21,6 +21,40 @@ If you need users to approve something (requirements, roadmap, plan), you MUST i
 
 ---
 
+## Default Coding Standards
+
+These rules apply to ALL generated code **unless** overridden by `.planning/CONSTITUTION.md`.
+They are the baseline quality floor — not optional suggestions.
+
+1. **Handle errors.** Every async call gets try/catch or `.catch()`. Never swallow errors silently.
+2. **No `any` in TypeScript.** Use `unknown` and narrow, or define a proper type.
+3. **Prefer `const` over `let`.** Only use `let` when reassignment is actually needed. Never use `var`.
+4. **Prefer named exports** over default exports (easier to refactor and search).
+5. **Use early returns** to reduce nesting. Guard clauses first, happy path last.
+6. **Validate inputs at boundaries.** API routes, form handlers, and CLI args must validate before processing.
+7. **No hardcoded secrets or credentials.** Use environment variables.
+8. **Keep functions small.** If a function does more than one thing, split it.
+9. **Name things clearly.** `getUserById` not `getData`. `isValid` not `flag`. No single-letter variables outside loops.
+10. **Delete dead code.** Don't comment it out — git has history.
+
+---
+
+## Execution Rules
+
+**Read before write.** Before modifying or creating a file, always read neighboring files in the same directory to match existing patterns, imports, naming conventions, and code style. Never assume file contents.
+
+**Follow existing project structure.** Place new files where the project's existing conventions dictate. If no structure exists, ask during the questioning phase. Don't invent new directory patterns when the project already has them.
+
+**Guard dependencies.** Before adding a package:
+- Check `package.json` (or equivalent) for an existing dependency that serves the same purpose.
+- Prefer the standard library and existing deps over adding new ones.
+- Never mix package managers (npm/yarn/pnpm) — detect and use what the project already uses.
+- One utility function does not justify a new dependency.
+
+**Fix, don't apologize.** During task execution, fix problems directly. Don't explain what went wrong before fixing it — include the explanation in the commit message instead. Tokens spent apologizing are tokens not spent building.
+
+---
+
 ## Commands
 
 | Trigger | Action |
@@ -242,6 +276,7 @@ If "execute now" → run gsd execute-phase N workflow.
 
 2. For each task:
    - **Show:** `[→] Working on: [task description]`
+   - **Apply execution rules:** Read before write, follow project structure, guard dependencies, fix don't apologize
    - Execute the task
    - **Apply deviation rules** (see gsd-execution.instructions.md):
      - Auto-fix bugs, missing critical functionality, blockers
@@ -356,6 +391,7 @@ Use `/delegate [description]` for async work.
 ## gsd constitution
 
 Set project principles and coding standards. Can be run standalone or as part of `gsd new-project`.
+Overrides the **Default Coding Standards** section above with project-specific rules.
 
 Display:
 ```

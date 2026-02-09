@@ -314,7 +314,6 @@ Copilot-cli-GSD/
 │   └── package.json
 ├── gsd-opencode/             # Original OpenCode version (submodule)
 ├── original/                  # Original TÂCHES version (submodule)
-├── INTEGRATION-ANALYSIS.md   # Detailed analysis of CLI features
 ├── CLAUDE.md                 # Project instructions
 └── README.md                 # This file
 ```
