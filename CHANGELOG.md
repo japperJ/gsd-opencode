@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [gsd-copilot-cli v0.3.1] - 2026-02-09
+
+Installer improvements and documentation fixes.
+
+### Added
+- **`--yolo` / `-Y` flag** — Auto-approve all tool execution in Copilot CLI (npx, npm, shell commands run without confirmation)
+- Interactive YOLO prompt during install when flag not set via CLI
+- `--yolo` documented in help text, CLI Options, and README
+
+### Changed
+- Install paths now use relative `gsd-opencode/gsd-copilot-cli/bin/install.js` (clone into project directory)
+- Git clone URL updated to `https://github.com/japperJ/gsd-opencode`
+- Help text usage line changed from `npx gsd-copilot-cli` to `node gsd-opencode/...`
+- package.json repository URL updated to `japperJ/gsd-opencode`
+
+### Fixed
+- Removed `~/gsd-opencode` and `$HOME/gsd-opencode` paths that didn't work on Windows
+- Removed `/path/to/gsd-opencode` placeholder paths that users tried to use literally
+- CLAUDE.md file structure now includes `CONSTITUTION.md` and `debug/` directory
+- CLAUDE.md repo structure now includes `CLAUDE.md` entry
+
 ## [gsd-copilot-cli v0.3.0] - 2026-02-06
 
 Enhanced workflow with features from competitive research (SpecKit, oh-my-opencode, Aider, PIV-SpecKit, Claude Task Master).
