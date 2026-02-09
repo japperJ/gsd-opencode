@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const readline = require("readline");
+const { spawn } = require("child_process");
 
 // Colors
 const cyan = "\x1b[36m";
@@ -259,10 +260,7 @@ function showUsage(mode) {
 
   ${yellow}How to use:${reset}
 
-  1. Start Copilot CLI:
-     ${cyan}copilot${reset}
-
-  2. Say GSD commands conversationally:
+  Say GSD commands conversationally:
      ${dim}"gsd new-project"${reset}      Initialize a new project
      ${dim}"gsd plan-phase 1"${reset}     Plan using native /plan
      ${dim}"gsd execute-phase 1"${reset}  Execute phase 1
@@ -282,6 +280,22 @@ function showUsage(mode) {
   ${yellow}Learn more:${reset}
   https://docs.github.com/en/copilot/how-tos/copilot-cli/cli-best-practices
   `);
+}
+
+/**
+ * Launch Copilot CLI interactively
+ */
+function launchCopilot() {
+  console.log(`  ${yellow}Starting Copilot CLI...${reset}\n`);
+  const child = spawn("copilot", [], {
+    stdio: "inherit",
+    shell: true,
+    cwd: process.cwd(),
+  });
+  child.on("error", (err) => {
+    console.error(`  ${yellow}Could not start Copilot CLI:${reset} ${err.message}`);
+    console.log(`  Run ${cyan}copilot${reset} manually to get started.\n`);
+  });
 }
 
 /**
@@ -311,6 +325,7 @@ function install() {
   }
   
   showUsage(mode);
+  launchCopilot();
 }
 
 /**
@@ -339,15 +354,19 @@ function promptInstall() {
     if (choice === "1") {
       installMinimal();
       showUsage("minimal");
+      launchCopilot();
     } else if (choice === "2") {
       installPro();
       showUsage("pro");
+      launchCopilot();
     } else if (choice === "3") {
       installFull();
       showUsage("full");
+      launchCopilot();
     } else if (choice === "4") {
       installLegacy();
       showUsage("legacy");
+      launchCopilot();
     } else {
       console.log(`  ${dim}Invalid choice. Cancelled.${reset}`);
     }
