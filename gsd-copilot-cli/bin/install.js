@@ -40,6 +40,7 @@ const hasFull = args.includes("--full") || args.includes("-f");
 const hasLegacy = args.includes("--legacy");
 const hasHelp = args.includes("--help") || args.includes("-h");
 const hasYes = args.includes("-y") || args.includes("--yes");
+let hasYolo = args.includes("--yolo") || args.includes("-Y");
 
 console.log(banner);
 
@@ -53,6 +54,8 @@ if (hasHelp) {
     ${cyan}-f, --full${reset}     Install all files (Pro + hooks)
     ${cyan}--legacy${reset}       Install old copilot-instructions.md (for older CLI versions)
     ${cyan}-y, --yes${reset}      Skip confirmation prompt
+    ${cyan}-Y, --yolo${reset}     Auto-approve all tool execution in Copilot CLI
+                       (npx, npm, shell commands — no confirmation prompts)
     ${cyan}-h, --help${reset}     Show this help message
 
   ${yellow}Files created:${reset}
@@ -287,8 +290,15 @@ function showUsage(mode) {
  * Uses spawnSync so copilot gets full exclusive terminal ownership
  */
 function launchCopilot() {
+  const copilotArgs = [];
+
+  if (hasYolo) {
+    copilotArgs.push("--yolo");
+    console.log(`  ${yellow}⚡ YOLO mode:${reset} All tools, paths & URLs auto-approved\n`);
+  }
+
   console.log(`  ${yellow}Starting Copilot CLI...${reset}\n`);
-  const result = spawnSync("copilot", [], {
+  const result = spawnSync("copilot", copilotArgs, {
     stdio: "inherit",
     shell: true,
     cwd: process.cwd(),
@@ -351,27 +361,44 @@ function promptInstall() {
   `);
 
   rl.question(`  Choice ${dim}[1/2/3/4]${reset}: `, (answer) => {
-    rl.close();
     const choice = answer.trim() || "1";
+    let mode = null;
 
     if (choice === "1") {
       installMinimal();
-      showUsage("minimal");
-      launchCopilot();
+      mode = "minimal";
     } else if (choice === "2") {
       installPro();
-      showUsage("pro");
-      launchCopilot();
+      mode = "pro";
     } else if (choice === "3") {
       installFull();
-      showUsage("full");
-      launchCopilot();
+      mode = "full";
     } else if (choice === "4") {
       installLegacy();
-      showUsage("legacy");
-      launchCopilot();
+      mode = "legacy";
     } else {
+      rl.close();
       console.log(`  ${dim}Invalid choice. Cancelled.${reset}`);
+      return;
+    }
+
+    // Ask about YOLO mode if not already set via CLI flag
+    if (!hasYolo) {
+      console.log(`\n  ${yellow}YOLO mode${reset} auto-approves all tool execution`);
+      console.log(`  ${dim}(npx, npm, shell commands run without confirmation prompts)${reset}\n`);
+      rl.question(`  Enable YOLO mode? ${dim}[y/N]${reset}: `, (yoloAnswer) => {
+        rl.close();
+        const yoloChoice = yoloAnswer.trim().toLowerCase();
+        if (yoloChoice === "y" || yoloChoice === "yes") {
+          hasYolo = true;
+        }
+        showUsage(mode);
+        launchCopilot();
+      });
+    } else {
+      rl.close();
+      showUsage(mode);
+      launchCopilot();
     }
   });
 }
