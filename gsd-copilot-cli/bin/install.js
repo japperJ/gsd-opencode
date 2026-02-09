@@ -3,7 +3,6 @@
 const fs = require("fs");
 const path = require("path");
 const readline = require("readline");
-const { spawn, execSync } = require("child_process");
 
 // Colors
 const cyan = "\x1b[36m";
@@ -286,51 +285,16 @@ function showUsage(mode) {
 }
 
 /**
- * Launch Copilot CLI interactively
- * Resolves copilot path and spawns with proper shell for the platform
+ * Show the next step command to run
  */
-function launchCopilot() {
-  const copilotArgs = [];
-
+function showNextStep() {
+  const cmd = hasYolo ? "copilot --yolo" : "copilot";
+  console.log(`  ${yellow}Next step — run:${reset}\n`);
+  console.log(`  ${cyan}${cmd}${reset}`);
   if (hasYolo) {
-    copilotArgs.push("--yolo");
-    console.log(`  ${yellow}⚡ YOLO mode:${reset} All tools, paths & URLs auto-approved\n`);
+    console.log(`  ${dim}(⚡ YOLO mode: all tools, paths & URLs auto-approved)${reset}`);
   }
-
-  console.log(`  ${yellow}Starting Copilot CLI...${reset}\n`);
-
-  let cmd, cmdArgs;
-
-  if (process.platform === "win32") {
-    // On Windows, copilot is a .ps1 script — must run through powershell
-    try {
-      const copilotPath = execSync("powershell -NoProfile -Command \"(Get-Command copilot).Source\"", { encoding: "utf8" }).trim();
-      cmd = "powershell.exe";
-      cmdArgs = ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", copilotPath, ...copilotArgs];
-    } catch {
-      console.error(`  ${yellow}Could not find Copilot CLI.${reset}`);
-      console.log(`  Run ${cyan}copilot${reset} manually to get started.\n`);
-      return;
-    }
-  } else {
-    cmd = "copilot";
-    cmdArgs = copilotArgs;
-  }
-
-  const child = spawn(cmd, cmdArgs, {
-    stdio: "inherit",
-    cwd: process.cwd(),
-    env: process.env,
-  });
-
-  child.on("close", (code) => {
-    process.exit(code || 0);
-  });
-
-  child.on("error", (err) => {
-    console.error(`  ${yellow}Could not start Copilot CLI:${reset} ${err.message}`);
-    console.log(`  Run ${cyan}copilot${reset} manually to get started.\n`);
-  });
+  console.log();
 }
 
 /**
@@ -360,7 +324,7 @@ function install() {
   }
   
   showUsage(mode);
-  launchCopilot();
+  showNextStep();
 }
 
 /**
@@ -415,12 +379,12 @@ function promptInstall() {
           hasYolo = true;
         }
         showUsage(mode);
-        launchCopilot();
+        showNextStep();
       });
     } else {
       rl.close();
       showUsage(mode);
-      launchCopilot();
+      showNextStep();
     }
   });
 }
