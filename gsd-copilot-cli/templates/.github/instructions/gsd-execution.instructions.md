@@ -8,6 +8,16 @@ These rules apply during `gsd execute-phase` and `gsd plan-phase`.
 
 ---
 
+## File Safety Rules
+
+### Read Before Edit
+Before modifying any file, ALWAYS read its current contents first. Never edit a file you haven't read in this session. This prevents blind overwrites, context-blind changes, and hallucinated file contents.
+
+### Verify After Write
+After writing or editing a file, read it back to confirm the change was applied correctly. If the content doesn't match intent (truncated, malformed, wrong location), fix immediately before moving on.
+
+---
+
 ## Deviation Rules (During Execution)
 
 While executing tasks, you WILL discover work not in the plan. This is normal. Apply these rules automatically and track all deviations.
