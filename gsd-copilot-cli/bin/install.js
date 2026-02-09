@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const readline = require("readline");
-const { spawn } = require("child_process");
+const { spawnSync } = require("child_process");
 
 // Colors
 const cyan = "\x1b[36m";
@@ -284,18 +284,21 @@ function showUsage(mode) {
 
 /**
  * Launch Copilot CLI interactively
+ * Uses spawnSync so copilot gets full exclusive terminal ownership
  */
 function launchCopilot() {
   console.log(`  ${yellow}Starting Copilot CLI...${reset}\n`);
-  const child = spawn("copilot", [], {
+  const result = spawnSync("copilot", [], {
     stdio: "inherit",
     shell: true,
     cwd: process.cwd(),
+    env: process.env,
   });
-  child.on("error", (err) => {
-    console.error(`  ${yellow}Could not start Copilot CLI:${reset} ${err.message}`);
+  if (result.error) {
+    console.error(`  ${yellow}Could not start Copilot CLI:${reset} ${result.error.message}`);
     console.log(`  Run ${cyan}copilot${reset} manually to get started.\n`);
-  });
+  }
+  process.exit(result.status || 0);
 }
 
 /**
