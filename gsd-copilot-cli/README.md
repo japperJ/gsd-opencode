@@ -11,8 +11,9 @@
 > **Note:** Package not yet published to npm. Clone the repo first, then run from your project directory:
 
 ```bash
-# From your project directory (replace ~/gsd-opencode with actual clone path)
-node ~/gsd-opencode/gsd-copilot-cli/bin/install.js
+# From your project directory:
+git clone https://github.com/japperJ/gsd-opencode
+node gsd-opencode/gsd-copilot-cli/bin/install.js
 ```
 
 Choose your installation mode:
@@ -29,7 +30,7 @@ Choose your installation mode:
 
 ```bash
 # Install (from your project directory)
-node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --minimal
+node gsd-opencode/gsd-copilot-cli/bin/install.js --minimal
 
 # Start Copilot CLI
 copilot
@@ -110,7 +111,7 @@ AGENTS.md
 ## CLI Options
 
 ```bash
-node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --help
+node gsd-opencode/gsd-copilot-cli/bin/install.js --help
 
 Options:
   -m, --minimal  Install AGENTS.md only (recommended)

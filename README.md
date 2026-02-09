@@ -32,14 +32,10 @@ Based on [gsd-opencode](https://github.com/rokicool/gsd-opencode) by TÂCHES & r
 ## Quick Start
 
 ```bash
-# Clone the repo
-git clone https://github.com/japperJ/gsd-opencode
-
-# Go to your project directory
+# From your project directory, clone and install
 cd your-project
-
-# Install GSD
-node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --minimal
+git clone https://github.com/japperJ/gsd-opencode
+node gsd-opencode/gsd-copilot-cli/bin/install.js --minimal
 
 # Start Copilot CLI
 copilot
@@ -188,25 +184,23 @@ your-project/
 > **Note:** Package not yet published to npm. Use the local install method below.
 
 ```bash
-# First, clone the repo (if you haven't)
+# From your project directory:
 git clone https://github.com/japperJ/gsd-opencode
 
-# Then from your project directory:
-
 # Interactive (prompts for choice)
-node ~/gsd-opencode/gsd-copilot-cli/bin/install.js
+node gsd-opencode/gsd-copilot-cli/bin/install.js
 
 # Minimal — AGENTS.md only (recommended)
-node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --minimal
+node gsd-opencode/gsd-copilot-cli/bin/install.js --minimal
 
 # Pro — AGENTS.md + advanced instruction files (verification, execution, debugging)
-node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --pro
+node gsd-opencode/gsd-copilot-cli/bin/install.js --pro
 
 # Full — Pro + hooks (experimental)
-node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --full
+node gsd-opencode/gsd-copilot-cli/bin/install.js --full
 
 # Legacy — copilot-instructions.md (v0.1 compatibility)
-node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --legacy
+node gsd-opencode/gsd-copilot-cli/bin/install.js --legacy
 ```
 
 **Future:** Once published to npm, you'll be able to use `npx gsd-copilot-cli`.

@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const readline = require("readline");
+const { spawnSync } = require("child_process");
 
 // Colors
 const cyan = "\x1b[36m";
@@ -285,16 +286,24 @@ function showUsage(mode) {
 }
 
 /**
- * Show the next step command to run
+ * Launch Copilot CLI after install
  */
-function showNextStep() {
-  const cmd = hasYolo ? "copilot --yolo" : "copilot";
-  console.log(`  ${yellow}Next step — run:${reset}\n`);
-  console.log(`  ${cyan}${cmd}${reset}`);
+function launchCopilot() {
+  const copilotArgs = hasYolo ? ["--yolo"] : [];
+  const label = hasYolo ? "copilot --yolo" : "copilot";
+  console.log(`  ${yellow}Launching:${reset} ${cyan}${label}${reset}`);
   if (hasYolo) {
     console.log(`  ${dim}(⚡ YOLO mode: all tools, paths & URLs auto-approved)${reset}`);
   }
   console.log();
+  const result = spawnSync("copilot", copilotArgs, {
+    stdio: "inherit",
+    shell: true,
+  });
+  if (result.error) {
+    console.log(`  ${yellow}Could not launch copilot automatically.${reset}`);
+    console.log(`  ${yellow}Run manually:${reset} ${cyan}${label}${reset}\n`);
+  }
 }
 
 /**
@@ -324,7 +333,7 @@ function install() {
   }
   
   showUsage(mode);
-  showNextStep();
+  launchCopilot();
 }
 
 /**
@@ -379,12 +388,12 @@ function promptInstall() {
           hasYolo = true;
         }
         showUsage(mode);
-        showNextStep();
+        launchCopilot();
       });
     } else {
       rl.close();
       showUsage(mode);
-      showNextStep();
+      launchCopilot();
     }
   });
 }
