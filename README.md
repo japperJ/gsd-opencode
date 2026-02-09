@@ -33,13 +33,13 @@ Based on [gsd-opencode](https://github.com/rokicool/gsd-opencode) by TÂCHES & r
 
 ```bash
 # Clone the repo
-git clone https://github.com/rokicool/Copilot-cli-GSD.git
+git clone https://github.com/japperJ/gsd-opencode
 
 # Go to your project directory
 cd your-project
 
-# Install GSD (replace <path-to-clone> with actual clone location)
-node <path-to-clone>/gsd-copilot-cli/bin/install.js --minimal
+# Install GSD
+node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --minimal
 
 # Start Copilot CLI
 copilot
@@ -189,24 +189,24 @@ your-project/
 
 ```bash
 # First, clone the repo (if you haven't)
-git clone https://github.com/rokicool/Copilot-cli-GSD.git
+git clone https://github.com/japperJ/gsd-opencode
 
 # Then from your project directory:
 
 # Interactive (prompts for choice)
-node <path-to-clone>/gsd-copilot-cli/bin/install.js
+node ~/gsd-opencode/gsd-copilot-cli/bin/install.js
 
 # Minimal — AGENTS.md only (recommended)
-node <path-to-clone>/gsd-copilot-cli/bin/install.js --minimal
+node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --minimal
 
 # Pro — AGENTS.md + advanced instruction files (verification, execution, debugging)
-node <path-to-clone>/gsd-copilot-cli/bin/install.js --pro
+node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --pro
 
 # Full — Pro + hooks (experimental)
-node <path-to-clone>/gsd-copilot-cli/bin/install.js --full
+node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --full
 
 # Legacy — copilot-instructions.md (v0.1 compatibility)
-node <path-to-clone>/gsd-copilot-cli/bin/install.js --legacy
+node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --legacy
 ```
 
 **Future:** Once published to npm, you'll be able to use `npx gsd-copilot-cli`.
@@ -297,7 +297,7 @@ node <path-to-clone>/gsd-copilot-cli/bin/install.js --legacy
 ## Repository Structure
 
 ```
-Copilot-cli-GSD/
+gsd-opencode/
 ├── gsd-copilot-cli/          # The npm package
 │   ├── templates/
 │   │   ├── AGENTS.md                              # Core GSD workflow
@@ -325,8 +325,8 @@ Copilot-cli-GSD/
 ### Cloning with Submodules
 
 ```bash
-git clone https://github.com/[your-username]/Copilot-cli-GSD.git
-cd Copilot-cli-GSD
+git clone https://github.com/japperJ/gsd-opencode
+cd gsd-opencode
 git submodule update --init --recursive
 ```
 

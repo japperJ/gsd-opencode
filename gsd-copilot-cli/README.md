@@ -11,8 +11,8 @@
 > **Note:** Package not yet published to npm. Clone the repo first, then run from your project directory:
 
 ```bash
-# Replace with the actual path where you cloned Copilot-cli-GSD
-node <path-to-clone>/gsd-copilot-cli/bin/install.js
+# From your project directory (replace ~/gsd-opencode with actual clone path)
+node ~/gsd-opencode/gsd-copilot-cli/bin/install.js
 ```
 
 Choose your installation mode:
@@ -29,7 +29,7 @@ Choose your installation mode:
 
 ```bash
 # Install (from your project directory)
-node <path-to-clone>/gsd-copilot-cli/bin/install.js --minimal
+node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --minimal
 
 # Start Copilot CLI
 copilot
@@ -110,7 +110,7 @@ AGENTS.md
 ## CLI Options
 
 ```bash
-node <path-to-clone>/gsd-copilot-cli/bin/install.js --help
+node ~/gsd-opencode/gsd-copilot-cli/bin/install.js --help
 
 Options:
   -m, --minimal  Install AGENTS.md only (recommended)
@@ -158,7 +158,7 @@ your-project/
 
 ## Documentation
 
-- [Full README](https://github.com/rokicool/Copilot-cli-GSD)
+- [Full README](https://github.com/japperJ/gsd-opencode)
 - [CLI Best Practices](https://docs.github.com/en/copilot/how-tos/copilot-cli/cli-best-practices)
 - [Adding Custom Instructions](https://docs.github.com/en/copilot/how-tos/copilot-cli/add-custom-instructions)
 - [Using Hooks](https://docs.github.com/en/copilot/how-tos/copilot-cli/use-hooks)
