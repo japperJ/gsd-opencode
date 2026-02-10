@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Project lifecycle management: add features, manage phases, and milestone versioning.
 
 ### Added
+- **Model hints** — Each command includes a 💡 Model recommendation (Strong/Mid-tier/Any) so users can switch models via `/model` for optimal cost vs quality per task
 - **`gsd add-feature [description]`** — Add a feature to an existing GSD project with lightweight questioning (2-3 questions), appends new requirements and phases without overwriting existing content
 - **`gsd add-phase [description]`** — Append a new phase to end of current roadmap, auto-calculates next integer phase number, creates phase directory
 - **`gsd insert-phase [after] [description]`** — Insert urgent phase using decimal numbering (e.g., 3.1, 3.2) between existing phases, preserves logical sequence

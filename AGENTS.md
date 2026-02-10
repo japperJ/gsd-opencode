@@ -57,6 +57,8 @@ They are the baseline quality floor — not optional suggestions.
 
 ## Commands
 
+> 💡 Each command below includes a **Model** hint. Use `/model` in Copilot CLI to switch models between tasks. Strong reasoning models (Opus, o3) for architecture; mid-tier (Sonnet 4) for execution; any model for mechanical tasks.
+
 | Trigger | Action |
 |---------|--------|
 | `gsd help` | Show commands |
@@ -79,6 +81,8 @@ They are the baseline quality floor — not optional suggestions.
 ---
 
 ## gsd new-project — MANDATORY WORKFLOW
+
+> 💡 **Model:** Strong reasoning recommended (`/model` to switch) — architecture and scoping decisions shape the entire project.
 
 **🚨 CRITICAL RULE: NEVER STOP BETWEEN PHASES**
 
@@ -236,6 +240,8 @@ If "later" → stop and wait.
 
 ## gsd plan-phase N
 
+> 💡 **Model:** Strong reasoning recommended — plan quality drives execution quality.
+
 1. Read `.planning/ROADMAP.md` for phase N details
 2. Read `.planning/CONSTITUTION.md` if it exists (project principles guide planning)
 3. Use `/plan` to create implementation plan
@@ -261,6 +267,8 @@ If "execute now" → run gsd execute-phase N workflow.
 ---
 
 ## gsd execute-phase N
+
+> 💡 **Model:** Mid-tier is fine — execution follows the explicit plan.
 
 **Display progress banner at start:**
 ```
@@ -314,6 +322,8 @@ If "execute now" → run gsd execute-phase N workflow.
 
 ## gsd verify-work N
 
+> 💡 **Model:** Mid-tier is fine — checklist-driven verification with some reasoning.
+
 1. **Perform 3-level artifact verification** (see gsd-verification.instructions.md):
    - Level 1: Files exist
    - Level 2: Files are substantive (not stubs)
@@ -351,6 +361,8 @@ If "See project progress" → run gsd progress workflow.
 
 ## gsd progress
 
+> 💡 **Model:** Any model — reads and displays files.
+
 Read STATE.md and ROADMAP.md, then display:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -380,6 +392,8 @@ Next: [suggested action]
 
 ## gsd quick [task]
 
+> 💡 **Model:** Depends on task complexity.
+
 For small tasks that don't need planning:
 - Execute directly
 - Commit with proper message
@@ -394,6 +408,8 @@ Use `/delegate [description]` for async work.
 ---
 
 ## gsd constitution
+
+> 💡 **Model:** Strong reasoning recommended — these decisions persist for the entire project.
 
 Set project principles and coding standards. Can be run standalone or as part of `gsd new-project`.
 Overrides the **Default Coding Standards** section above with project-specific rules.
@@ -431,6 +447,8 @@ Display:
 
 ## gsd debug [issue]
 
+> 💡 **Model:** Strong reasoning recommended — hypothesis generation and complex diagnosis.
+
 Scientific debugging with persistent state. See gsd-debugging.instructions.md for full methodology.
 
 Display:
@@ -452,6 +470,8 @@ Display:
 ---
 
 ## gsd pause
+
+> 💡 **Model:** Any model — mechanical file operations.
 
 Save current work state for later resumption.
 
@@ -476,6 +496,8 @@ Display:
 
 ## gsd resume
 
+> 💡 **Model:** Any model — reads state and presents options.
+
 Resume from saved state.
 
 1. Read STATE.md and `.planning/.continue-here`
@@ -496,6 +518,8 @@ If "Show progress" → run gsd progress.
 ---
 
 ## gsd add-feature [description]
+
+> 💡 **Model:** Strong reasoning recommended — must understand existing architecture to integrate new features.
 
 Add a feature to an existing GSD project. This is the **brownfield equivalent** of `gsd new-project` — the project exists, `.planning/` has history.
 
@@ -596,6 +620,8 @@ If "Plan the first new phase" → run `gsd plan-phase N` with first new phase nu
 
 ## gsd add-phase [description]
 
+> 💡 **Model:** Any model — mechanical file operations.
+
 Append a new phase to the end of the current roadmap.
 
 **Use for:** Planned work discovered during execution that belongs at the end.
@@ -646,6 +672,8 @@ Display:
 ---
 
 ## gsd insert-phase [after] [description]
+
+> 💡 **Model:** Any model — mechanical file operations.
 
 Insert an urgent phase using decimal numbering. Preserves the logical sequence of planned phases.
 
@@ -703,6 +731,8 @@ Display:
 ---
 
 ## gsd new-milestone [name]
+
+> 💡 **Model:** Strong reasoning recommended — strategic planning for the next development cycle.
 
 Start a new milestone cycle. This is the **full cycle** for existing projects: questioning → research → requirements → roadmap.
 
@@ -827,6 +857,8 @@ If "Plan the first phase" → run `gsd plan-phase {N}`.
 ---
 
 ## gsd complete-milestone [version]
+
+> 💡 **Model:** Any model — archival and file operations.
 
 Archive a completed milestone, create git tag, and prepare for next.
 
