@@ -61,6 +61,11 @@ They are the baseline quality floor — not optional suggestions.
 |---------|--------|
 | `gsd help` | Show commands |
 | `gsd new-project [description]` | **START QUESTIONING** (do NOT build yet) |
+| `gsd add-feature [description]` | Add feature to existing project (lightweight questioning) |
+| `gsd add-phase [description]` | Append a phase to end of current roadmap |
+| `gsd insert-phase [after] [description]` | Insert urgent phase using decimal numbering (e.g., 3.1) |
+| `gsd new-milestone [name]` | Start new milestone cycle (archives current, continues numbering) |
+| `gsd complete-milestone [version]` | Archive completed milestone, git tag, prepare for next |
 | `gsd plan-phase N` | Plan phase N |
 | `gsd execute-phase N` | Execute phase N |
 | `gsd verify-work N` | Review phase N (3-level verification) |
@@ -490,18 +495,455 @@ If "Show progress" → run gsd progress.
 
 ---
 
+## gsd add-feature [description]
+
+Add a feature to an existing GSD project. This is the **brownfield equivalent** of `gsd new-project` — the project exists, `.planning/` has history.
+
+**🛑 DO NOT WRITE CODE. This is a planning command.**
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► ADD FEATURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+### Step 1: Load Context
+
+Read existing project state:
+- `.planning/PROJECT.md` — what exists already
+- `.planning/ROADMAP.md` — current phases
+- `.planning/REQUIREMENTS.md` — existing requirements
+- `.planning/STATE.md` — current progress
+
+Find the highest existing phase number (including decimals) so new phases continue from there.
+
+### Step 2: Lightweight Questioning (2-3 questions)
+
+**Use ask_user to gather feature context:**
+
+1. Ask about **feature scope**:
+   - Options: "Small (1-2 phases)", "Medium (3-4 phases)", "Large (5+ phases, consider gsd new-milestone)"
+
+2. Ask about **research**:
+   - Options: "Research best practices first", "I know what I need"
+
+3. If research selected: do quick web search, display key findings.
+
+### Step 3: Define New Requirements
+
+Build new requirements based on answers + description.
+
+**🚨 CRITICAL: Include requirements IN the ask_user question text.**
+
+Continue REQ-ID numbering from existing REQUIREMENTS.md. Use same category format.
+
+**Call ask_user with the NEW requirements EMBEDDED in the question:**
+```
+ask_user(
+  question: "━━━ GSD ► NEW REQUIREMENTS ━━━\n\nExisting: REQ-001 through REQ-007\n\nNew requirements for [feature]:\n- REQ-008: [requirement]\n- REQ-009: [requirement]\n- REQ-010: [requirement]\n\nOut of Scope:\n- [item]\n\nDoes this look right?",
+  options: ["Yes, continue", "No, make changes"]
+)
+```
+
+### Step 4: Define New Phases
+
+Build new phases that continue numbering from the last existing phase.
+
+**Phase numbering rule:** If last phase is 6, new phases start at 7. Never renumber existing phases.
+
+**🚨 CRITICAL: Include phases IN the ask_user question text.**
+
+**Call ask_user with the NEW phases EMBEDDED in the question:**
+```
+ask_user(
+  question: "━━━ GSD ► NEW PHASES ━━━\n\nExisting phases: 1-6\n\nNew phases for [feature]:\n\nPhase 7: [Name]\n- [deliverable]\nReqs: REQ-008, REQ-009\n\nPhase 8: [Name]\n- [deliverable]\nReqs: REQ-010\n\nDoes this work?",
+  options: ["Yes, create", "No, adjust"]
+)
+```
+
+### Step 5: Update Files
+
+**Append** to existing files (never overwrite existing content):
+
+1. **REQUIREMENTS.md** — Append new requirements under a new section heading for this feature
+2. **ROADMAP.md** — Append new phase entries after the last existing phase
+3. **STATE.md** — Update with:
+   - Under "Roadmap Evolution": `Feature added: [description] (Phases N-M)`
+   - Update "Next Phase" reference if appropriate
+4. **PROJECT.md** — Add feature to current milestone goals if milestone section exists
+
+### Step 6: Done
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► FEATURE ADDED ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Feature: [description]
+New requirements: REQ-008 through REQ-010
+New phases: 7-8
+```
+
+**Use ask_user with options:**
+- Question: "Feature added. What next?"
+- Options: "Plan the first new phase", "See progress", "I'm done for now"
+
+If "Plan the first new phase" → run `gsd plan-phase N` with first new phase number.
+
+---
+
+## gsd add-phase [description]
+
+Append a new phase to the end of the current roadmap.
+
+**Use for:** Planned work discovered during execution that belongs at the end.
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► ADD PHASE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+1. **Parse description** from user input. If empty, ask for it.
+
+2. **Load ROADMAP.md** — find the highest integer phase number (ignore decimals like 3.1, 3.2).
+
+3. **Calculate next phase number:** highest integer + 1. Format as two-digit (e.g., `07`).
+
+4. **Generate slug:** Convert description to kebab-case (e.g., "Add authentication" → `add-authentication`).
+
+5. **Create phase directory:** `.planning/phases/{NN}-{slug}/`
+
+6. **Append to ROADMAP.md** (after last phase, before any `---` separator):
+   ```
+   ### Phase {N}: {Description}
+
+   **Goal:** [To be planned]
+   **Depends on:** Phase {N-1}
+
+   Plans:
+   - [ ] TBD (run gsd plan-phase {N} to break down)
+   ```
+
+7. **Update STATE.md** — Under "Roadmap Evolution" add: `Phase {N} added: {description}`
+
+8. **Show completion:**
+   ```
+   Phase {N} added: {description}
+   Directory: .planning/phases/{NN}-{slug}/
+   
+   Next: gsd plan-phase {N}
+   ```
+
+**Anti-patterns:**
+- Don't modify existing phases
+- Don't use decimal numbering (that's `gsd insert-phase`)
+- Don't create plans yet (that's `gsd plan-phase`)
+
+---
+
+## gsd insert-phase [after] [description]
+
+Insert an urgent phase using decimal numbering. Preserves the logical sequence of planned phases.
+
+**Use for:** Urgent work discovered mid-milestone that must happen between existing phases.
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► INSERT PHASE (URGENT)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+1. **Parse arguments:**
+   - First argument: integer phase number to insert after
+   - Rest: phase description
+   - Example: `gsd insert-phase 3 Fix critical auth bug`
+
+2. **Verify target phase** exists in ROADMAP.md. If not found, list available phases.
+
+3. **Find existing decimals** after that phase (e.g., 3.1, 3.2). Calculate next decimal:
+   - No decimals exist → 3.1
+   - 3.1 exists → 3.2
+   - 3.1, 3.2 exist → 3.3
+
+4. **Generate slug:** kebab-case from description.
+
+5. **Create phase directory:** `.planning/phases/{N.M}-{slug}/`
+
+6. **Insert into ROADMAP.md** immediately after target phase's content, with `(INSERTED)` marker:
+   ```
+   ### Phase {N.M}: {Description} (INSERTED)
+
+   **Goal:** [Urgent work — to be planned]
+   **Depends on:** Phase {N}
+
+   Plans:
+   - [ ] TBD (run gsd plan-phase {N.M} to break down)
+   ```
+
+7. **Update STATE.md** — Under "Roadmap Evolution" add: `Phase {N.M} inserted after Phase {N}: {description} (URGENT)`
+
+8. **Show completion:**
+   ```
+   Phase {N.M} inserted (URGENT): {description}
+   Directory: .planning/phases/{N.M}-{slug}/
+   
+   Next: gsd plan-phase {N.M}
+   ```
+
+**Anti-patterns:**
+- Don't use for end-of-roadmap work (use `gsd add-phase`)
+- Don't renumber existing phases
+- Don't modify the target phase's content
+
+---
+
+## gsd new-milestone [name]
+
+Start a new milestone cycle. This is the **full cycle** for existing projects: questioning → research → requirements → roadmap.
+
+**Phase numbering continues** from previous milestone (never resets to 1).
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► NEW MILESTONE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+### Step 1: Load Context
+
+Read project state:
+- `.planning/PROJECT.md` — validated requirements, history
+- `.planning/ROADMAP.md` — current phases, what shipped
+- `.planning/STATE.md` — pending todos, blockers
+- `.planning/milestones/` — previous milestone archives
+
+### Step 2: Gather Milestone Goals
+
+Present what shipped in the last milestone, then ask:
+
+**Use ask_user:**
+```
+ask_user(
+  question: "What do you want to build next for this milestone?",
+  options: []  // free text input
+)
+```
+
+Follow up with clarifying questions as needed (2-3 max).
+
+### Step 3: Determine Version
+
+Parse last version from milestones directory or PROJECT.md.
+
+**Use ask_user:**
+```
+ask_user(
+  question: "Milestone version?",
+  options: ["v{X.Y+1} (minor)", "v{X+1}.0 (major)", "Custom"]
+)
+```
+
+### Step 4: Update PROJECT.md
+
+Add/update:
+```markdown
+## Current Milestone: v{X.Y} {Name}
+
+**Goal:** [One sentence]
+
+**Target features:**
+- [Feature 1]
+- [Feature 2]
+```
+
+### Step 5: Research (optional)
+
+**Use ask_user:**
+```
+ask_user(
+  question: "Research best practices for the new features before defining requirements?",
+  options: ["Yes, research first", "No, skip to requirements"]
+)
+```
+
+If yes: Do web search focused on NEW features only (not re-researching existing capabilities). Display key findings.
+
+### Step 6: Define Requirements
+
+Build requirements for this milestone's new features:
+- Continue REQ-ID numbering from previous milestone
+- Present by category with multi-select for scoping
+- Track deferred items as "Future Requirements"
+
+**🚨 CRITICAL: Include requirements IN the ask_user question text.**
+
+Create `.planning/REQUIREMENTS.md` with milestone-scoped requirements.
+
+### Step 7: Create Roadmap
+
+**Phase numbering continues** from previous milestone. If v1.0 ended at Phase 6, v1.1 starts at Phase 7.
+
+Build phase structure from requirements. Each requirement maps to exactly one phase.
+
+**🚨 CRITICAL: Include roadmap IN the ask_user question text.**
+
+Update `.planning/ROADMAP.md` — append new phases (keep completed phases collapsed).
+
+### Step 8: Update STATE.md
+
+```markdown
+## Current Position
+
+Phase: Not started (defining requirements)
+Status: Milestone v{X.Y} started
+Last activity: [today]
+```
+
+### Step 9: Done
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► MILESTONE INITIALIZED ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Milestone: v{X.Y} {Name}
+Requirements: {count}
+Phases: {N} through {M}
+```
+
+**Use ask_user with options:**
+- Question: "Milestone initialized. What next?"
+- Options: "Plan the first phase", "I'll do it later"
+
+If "Plan the first phase" → run `gsd plan-phase {N}`.
+
+---
+
+## gsd complete-milestone [version]
+
+Archive a completed milestone, create git tag, and prepare for next.
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► COMPLETE MILESTONE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+### Step 1: Verify Readiness
+
+Read `.planning/ROADMAP.md` and check that all phases in the milestone have completed plans (SUMMARY.md exists).
+
+Present milestone stats:
+```
+Milestone v{version}:
+- Phases completed: {N}
+- Requirements fulfilled: {N}/{total}
+- Timeline: {start} → {end}
+```
+
+**Use ask_user:**
+```
+ask_user(
+  question: "Ready to archive milestone v{version}?",
+  options: ["Yes, archive it", "No, not ready yet"]
+)
+```
+
+### Step 2: Archive Roadmap
+
+Create `.planning/milestones/v{version}-ROADMAP.md`:
+- Copy all phase details from ROADMAP.md for this milestone
+- Include accomplishments extracted from phase SUMMARY.md files
+
+Update ROADMAP.md — collapse this milestone to a one-line summary:
+```markdown
+<details>
+<summary>v{version}: {milestone name} — {phase count} phases ✓</summary>
+
+See `.planning/milestones/v{version}-ROADMAP.md` for full details.
+</details>
+```
+
+### Step 3: Archive Requirements
+
+Create `.planning/milestones/v{version}-REQUIREMENTS.md`:
+- Copy all requirements with checkboxes checked (✅)
+- Note requirement outcomes (validated, adjusted, dropped)
+
+Delete `.planning/REQUIREMENTS.md` — it will be recreated fresh by `gsd new-milestone`.
+
+### Step 4: Update PROJECT.md
+
+Add shipped milestone to history:
+```markdown
+## Shipped
+
+### v{version}: {Name}
+Key accomplishments:
+- [accomplishment 1]
+- [accomplishment 2]
+```
+
+### Step 5: Git Tag
+
+```bash
+git add .planning/
+git commit -m "chore: archive milestone v{version}"
+git tag -a v{version} -m "{milestone summary}"
+```
+
+**Use ask_user:**
+```
+ask_user(
+  question: "Push tag v{version} to remote?",
+  options: ["Yes, push", "No, keep local"]
+)
+```
+
+### Step 6: Done
+
+Display:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GSD ► MILESTONE COMPLETE ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Archived: .planning/milestones/v{version}-ROADMAP.md
+           .planning/milestones/v{version}-REQUIREMENTS.md
+Tagged: v{version}
+```
+
+**Use ask_user with options:**
+- Question: "Milestone complete. What next?"
+- Options: "Start new milestone", "I'm done for now"
+
+If "Start new milestone" → run `gsd new-milestone`.
+
+---
+
 ## File Structure
 
 ```
 .planning/
 ├── CONSTITUTION.md         # Project principles & standards
 ├── PROJECT.md              # Vision
-├── REQUIREMENTS.md         # Scoped requirements
-├── ROADMAP.md              # Phases
+├── REQUIREMENTS.md         # Scoped requirements (current milestone)
+├── ROADMAP.md              # Phases (all milestones, completed ones collapsed)
 ├── STATE.md                # Current state (update often!)
 ├── .continue-here          # Resume marker (gsd pause/resume)
 ├── debug/                  # Active debug sessions
 │   └── resolved/           # Archived resolved issues
+├── milestones/             # Archived milestone artifacts
+│   ├── v1.0-ROADMAP.md     # Archived roadmap for v1.0
+│   └── v1.0-REQUIREMENTS.md # Archived requirements for v1.0
 └── phases/
     └── 01-foundation/
         ├── 01-01-PLAN.md

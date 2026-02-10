@@ -62,6 +62,11 @@ GSD v0.3 leverages Copilot CLI's built-in features:
 | Say this... | What happens |
 |-------------|--------------|
 | `gsd new-project` | Questioning → research → requirements → roadmap |
+| `gsd add-feature [desc]` | Add feature to existing project (lightweight questioning) |
+| `gsd add-phase [desc]` | Append phase to end of current roadmap |
+| `gsd insert-phase [after] [desc]` | Insert urgent phase with decimal numbering (e.g., 3.1) |
+| `gsd new-milestone [name]` | Start new milestone cycle (continues phase numbering) |
+| `gsd complete-milestone [ver]` | Archive milestone, git tag, prepare for next |
 | `gsd plan-phase 1` | Create structured plan using `/plan` |
 | `gsd execute-phase 1` | Execute tasks with atomic commits + auto-test |
 | `gsd verify-work 1` | 3-level verification + `/review` |
@@ -146,10 +151,13 @@ your-project/
 ├── AGENTS.md              # GSD workflow
 └── .planning/
     ├── PROJECT.md         # Vision
-    ├── REQUIREMENTS.md    # REQ-XXX scoped
-    ├── ROADMAP.md         # Phases
+    ├── REQUIREMENTS.md    # REQ-XXX scoped (current milestone)
+    ├── ROADMAP.md         # Phases (completed milestones collapsed)
     ├── CONSTITUTION.md    # Project principles (optional)
     ├── STATE.md           # Current state
+    ├── milestones/        # Archived milestone artifacts
+    │   ├── v1.0-ROADMAP.md
+    │   └── v1.0-REQUIREMENTS.md
     └── phases/
         └── 01-foundation/
             ├── 01-01-PLAN.md

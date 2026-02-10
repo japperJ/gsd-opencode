@@ -8,24 +8,20 @@ Based on [gsd-opencode](https://github.com/rokicool/gsd-opencode) by TÂCHES & r
 
 ---
 
-## What's New in v0.3.0
+## What's New in v0.4.0
 
-**Enhanced workflow with best features from the ecosystem**
+**Project lifecycle management**
 
-- **`gsd constitution`** — Set project principles and coding standards (inspired by [SpecKit](https://github.com/github/spec-kit))
-- **`gsd debug`** — Scientific debugging with persistent state, hypothesis testing, and 7 investigation techniques
-- **`gsd pause` / `gsd resume`** — Session management across context resets
-- **3-level verification** — Checks artifacts are Existing, Substantive (not stubs), and Wired (imported/used)
-- **Planner-checker loop** — Plans self-validated across 6 dimensions before execution
-- **Deviation rules** — Auto-fix bugs/blockers, STOP on architectural changes
-- **Auto-test loop** — Runs tests after each task, auto-fixes failures
-- **Pro install tier** (`--pro`) — Instruction files without experimental hooks
+- **`gsd add-feature`** — Add features to existing projects with lightweight questioning, appends requirements + phases
+- **`gsd add-phase`** / **`gsd insert-phase`** — Append or insert phases (decimal numbering for urgent work)
+- **`gsd new-milestone`** — Start new milestone cycle with full questioning → requirements → roadmap flow
+- **`gsd complete-milestone`** — Archive milestones to `.planning/milestones/`, git tag, collapse completed phases
+- **Milestone-scoped requirements** — `REQUIREMENTS.md` is per-milestone; archived on completion
+- **Continuous phase numbering** — Phase numbers never reset across milestones
 
 ### Previous Versions
 
-- **v0.2.2** — Selectable options with arrow keys, visual workplan with live checkboxes, auto-continue between phases
-- **v0.2.1** — Questioning workflow enforced with STOP gates, phase banners, 3-5 questions minimum
-- **v0.2.0** — Native Copilot CLI integration (`/plan`, `/review`, `/delegate`)
+- **v0.3.0** — Constitution, scientific debugging, pause/resume, 3-level verification, planner-checker loop, deviation rules, auto-test loop, pro install tier
 
 ---
 
@@ -83,6 +79,11 @@ Copilot CLI reads instructions in this order:
 | Say this... | What happens | Native feature used |
 |-------------|--------------|---------------------|
 | `gsd new-project` | Questioning → research → requirements → roadmap | Custom workflow |
+| `gsd add-feature [desc]` | Add feature to existing project (lightweight questioning) | Custom workflow |
+| `gsd add-phase [desc]` | Append phase to end of current roadmap | Custom workflow |
+| `gsd insert-phase [after] [desc]` | Insert urgent phase with decimal numbering (e.g., 3.1) | Custom workflow |
+| `gsd new-milestone [name]` | Start new milestone cycle (continues phase numbering) | Custom workflow |
+| `gsd complete-milestone [ver]` | Archive milestone, git tag, prepare for next | Custom workflow |
 | `gsd plan-phase 1` | Research phase, then create structured plan | `/plan` |
 | `gsd execute-phase 1` | Execute tasks with atomic commits + auto-test | File editing |
 | `gsd verify-work 1` | 3-level artifact verification + code review | `/review` |
@@ -105,6 +106,23 @@ gsd new-project → gsd plan-phase 1 → gsd execute-phase 1 → gsd verify-work
 ```
 
 **Note:** `gsd constitution` is **optional**. During `gsd new-project` you're asked if you want to set project principles. You can skip it and run `gsd constitution` later anytime.
+
+### Adding to Existing Projects
+
+```
+gsd add-feature → appends requirements + phases to existing project
+gsd add-phase   → appends a single phase to the roadmap
+gsd insert-phase → inserts urgent work with decimal numbering (e.g., 3.1)
+```
+
+### Milestone Lifecycle
+
+```
+gsd new-project → ... → gsd complete-milestone → gsd new-milestone → ...
+```
+
+- **`gsd complete-milestone`** archives the current milestone (roadmap + requirements) to `.planning/milestones/`, creates a git tag, and collapses the roadmap entry.
+- **`gsd new-milestone`** starts a fresh cycle (questioning → research → requirements → roadmap) with phase numbering continuing from where it left off.
 
 ### 1. Initialize Project (`gsd new-project`)
 
@@ -163,10 +181,13 @@ your-project/
 └── .planning/
     ├── CONSTITUTION.md       # Project principles & standards
     ├── PROJECT.md            # Project vision
-    ├── REQUIREMENTS.md       # Scoped requirements (REQ-XXX)
-    ├── ROADMAP.md            # Phase breakdown with statuses
+    ├── REQUIREMENTS.md       # Scoped requirements (current milestone)
+    ├── ROADMAP.md            # Phases (completed milestones collapsed)
     ├── STATE.md              # Project memory (update frequently!)
     ├── debug/                # Debug sessions (gsd debug)
+    ├── milestones/           # Archived milestone artifacts
+    │   ├── v1.0-ROADMAP.md
+    │   └── v1.0-REQUIREMENTS.md
     └── phases/
         ├── 01-foundation/
         │   ├── 01-RESEARCH.md

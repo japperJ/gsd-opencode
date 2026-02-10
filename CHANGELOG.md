@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [gsd-copilot-cli v0.4.0] - 2026-02-09
+
+Project lifecycle management: add features, manage phases, and milestone versioning.
+
+### Added
+- **`gsd add-feature [description]`** — Add a feature to an existing GSD project with lightweight questioning (2-3 questions), appends new requirements and phases without overwriting existing content
+- **`gsd add-phase [description]`** — Append a new phase to end of current roadmap, auto-calculates next integer phase number, creates phase directory
+- **`gsd insert-phase [after] [description]`** — Insert urgent phase using decimal numbering (e.g., 3.1, 3.2) between existing phases, preserves logical sequence
+- **`gsd new-milestone [name]`** — Start new milestone cycle with full questioning → research → requirements → roadmap flow, phase numbering continues from previous milestone
+- **`gsd complete-milestone [version]`** — Archive completed milestone (roadmap + requirements) to `.planning/milestones/`, create git tag, collapse completed phases in ROADMAP.md
+- Milestone archival directory `.planning/milestones/` with `v{X.Y}-ROADMAP.md` and `v{X.Y}-REQUIREMENTS.md` archives
+- Phase numbering rules: integers for planned work, decimals for urgent insertions, never resets across milestones
+
+### Changed
+- AGENTS.md template expanded with 5 new command definitions (~500 lines added)
+- Commands table updated from 12 to 17 entries across all documentation files
+- File structure diagrams updated to include `milestones/` directory
+- REQUIREMENTS.md now labeled as "current milestone" scoped (archived per milestone)
+- ROADMAP.md now supports collapsed milestone entries via `<details>` tags
+- Core Workflow section in README.md expanded with "Adding to Existing Projects" and "Milestone Lifecycle" subsections
+
 ## [gsd-copilot-cli v0.3.1] - 2026-02-09
 
 Installer improvements and documentation fixes.
