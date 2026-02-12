@@ -1,5 +1,9 @@
 # GSD — Get Shit Done for GitHub Copilot CLI
 
+## Development stopped on this project for now, i made this instead https://gist.github.com/japperJ/cdeaa98b5d7dd612d525d73bdc456e28
+
+
+
 **A spec-driven development workflow with native Copilot CLI integration**
 
 Based on [gsd-opencode](https://github.com/rokicool/gsd-opencode) by TÂCHES & rokicool.
